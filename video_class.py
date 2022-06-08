@@ -2,7 +2,6 @@ import cv2
 import time
 import numpy as np
 
-
 class Video :
 
     def __init__(self, filename) :
@@ -13,10 +12,10 @@ class Video :
     def load (self) :
         video = cv2.VideoCapture(self.filename)
 
-        if (video.isOpen() == False) :
+        if video.isOpened() == False :
             print ("Error opening video stream or file")
 
-        while (video.isOpen()) :
+        while video.isOpened() :
             
             #Capture frame-by-frame
             ret, frame = video.read()
