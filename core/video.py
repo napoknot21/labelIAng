@@ -8,7 +8,7 @@ class Video :
 		self.filepath = filename
 		self.start()
 
-	def start () :
+	def start (self) :
 		video = cv2.VideoCapture(self.filepath)
 
 		if (video.isOpened()== False):
@@ -33,7 +33,7 @@ class Video :
 				break
 
 	
-	def exit () :
+	def exit (self) :
 		video.release()
 		#out.release()
 		cv2.destroyAllWindows()
