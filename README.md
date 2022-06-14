@@ -4,7 +4,7 @@ A Desktop app for Valeo Vision.
 
 ## Pre-requisites
 
-The project is written in ```python 3```, so if you hace another version, upload it h [here](https://www.python.org/downloads/)
+The project is written in ```python 3```, so if you have another version, upload it [here](https://www.python.org/downloads/)
 
 The project uses differents libraries like ```Tkinter```,  ```pandas``` and ```opencv```, so we need install them by :
 ```
@@ -25,3 +25,13 @@ We run ```launcher.py``` file
 ```
 python3 launcher.py
 ```
+
+## How to use it ?
+This desktop app was created in order to automate the labeling of the simulation videos
+
+### First steps 
+When we run the ````launcher.py```, we'll have the *browser window*.
+
+We have to select a *video* file (the simulation video) and a *CSV* file (the data).
+
+Once selected, then we can start !
