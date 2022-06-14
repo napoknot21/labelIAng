@@ -30,7 +30,7 @@ python3 launcher.py
 This desktop app was created in order to automate the labeling of the simulation videos
 
 ### First steps 
-When we run the ````launcher.py```, we'll have the *browser window*.
+When we run the ```launcher.py```, we'll have the *browser window*.
 
 We have to select a *video* file (the simulation video) and a *CSV* file (the data).
 
