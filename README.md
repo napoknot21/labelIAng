@@ -6,9 +6,14 @@ A Desktop app for Valeo Vision.
 
 The project is written in ```python 3```, so if you have another version, upload it [here](https://www.python.org/downloads/)
 
-The project uses differents libraries like ```Tkinter```,  ```pandas``` and ```opencv```, so we need install them by :
+The project uses differents libraries like ```Tkinter```,  ```pandas```, ```opencv```, ```matplotlib``` so we need install them by :
+> with pip3 method
 ```
-pip3 install pandas tk opencv
+pip3 install pandas tk opencv-python matplotlib
+```
+> For conda users
+```
+conda install pandas tk opencv-python matplotlib
 ```
 
 ## Run the Project
