@@ -1,8 +1,4 @@
-import sys
-
-sys.path.insert(0,'./core')
-
-import model as md
+from core import model as md
 
 class Launcher :
 

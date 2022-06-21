@@ -2,180 +2,174 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 
-class BrowserFileWindow :
+class BrowserFileWindow:
 
-  #Constructor
-  def __init__ (self) :
-    self.filename_video = None
-    self.filename_csv = None
-    self.windowInit()
-
-
-  #Initialize the window properties
-  def windowInit(self) :
-    self.window = Tk()
-    self.filename = None
-    self.window.title("Video-app")
-    self.window.geometry("707x500")
-    self.window.eval('tk::PlaceWindow . center')
-    self.window.config(background="white")
-    self.loadLabelExplorerVideo()
-    self.loadLabelExplorerCsv()
-    self.loadLabelSubmitExit()
-    self.loadSpace()
-    self.buttonsLoadVideo()
-    self.buttonsLoadCsv()
-    self.buttonPlace()
-    self.window.mainloop()
+    #Constructor
+    def __init__(self):
+        self.filename_csv = None
+        self.filename_video = None
+        #Window settings
+        self.window = Tk()
+        self.initWindow()
+        #Main label settings (header, body, footer)
+        self.loadMainLabels()
+        self.placeMainLabels()
+        #Buttons and sub laber settings
+        self.loadAndPlaceBodyLabels()
+        self.loadAndPlaceFooterButtons()
+        self.window.mainloop()
 
 
-  #Label where the video path will be printed	
-  def loadLabelExplorerVideo (self) :
-    self.label_file_explorer_video = Label(
-        self.window,
-        text="Select a video file",
-        width=100,
-        height=5,
-        fg="blue"
-    )
+    #Initialize main window
+    def initWindow(self):
+        self.window.title("Video app")
+        self.window.geometry("707x500")
+        self.window.config(background="white")
+        self.loadIconWindow("ui/.images/icon.png")
+        self.window.resizable(False, False)
 
 
-  #Label where the video path will be printed
-  def loadLabelExplorerCsv (self) :
-    self.label_file_explorer_csv = Label(
-        self.window,
-        text="Select a csv file",
-        width=100,
-        height=5,
-        fg="blue"
-    )
+    #Import an images and put it as icon window
+    def loadIconWindow(self, filePath):
+        p1 = PhotoImage(file=filePath)
+        self.window.iconphoto(False, p1)
 
 
-  def loadLabelSubmitExit (self) :
-    self.label_submit_exit = Label(
-      self.window,
-	    width=100,
-      height=5,
-      fg="blue"
-    ) 
+    #Header initialization
+    def initHeaderLabel(self):
+        self.header = Label(self.window, text="VIDEO APP 1.0", width=100, height=5, fg="blue")
 
 
-  #Label for creating a "space" between the explorer labels
-  def loadSpace (self) :
-    self.label_space = Label(
-      self.window,
-	    text="error",
-      width=100,
-	    fg="white",
-      height= 3
-    )
+    #Body initialization
+    def initBodyLabel(self):
+        self.body = Label(self.window, width=100, height=24, bg="white", fg="blue")
 
 
-  #Window browser for the video file
-  def openFileNameVideo (self) :
-    filename = filedialog.askopenfilename(
-        initialdir="./",
-        title="Select a Video",
-        filetypes=(
-            	("AVI videos", "*.avi"),
-		          ("mp4 videos", "*.mp4"),
-            	("all files", "*.*")
-        )
-    )
-    self.filename_video = filename
-    if len(self.filename_video) != 0 :
-      self.printLabelContentVideo()
+    #Footer initialization
+    def initFooterLabel(self):
+        self.footer = Label(self.window, width=100, height=4, fg="blue")
 
 
-  #Window browser for the csv file
-  def openFileNameCsv (self) :
-    filename = filedialog.askopenfilename(
-        initialdir="./",
-        title="Select a Video",
-        filetypes=(
-            	("Csv files", "*.csv"),
-		          ("Exel files", "*.xls"),
-            	("all files", "*.*")
-        )
-    )
-    self.filename_csv = filename
-    if len(self.filename_csv) != 0:
-      self.printLabelContentCsv()
+    #Function initialization for all main label initialization functions
+    def loadMainLabels(self):
+        self.initHeaderLabel()
+        self.initBodyLabel()
+        self.initFooterLabel()
 
 
-  # Buttoms for the video label (canvas)
-  def buttonsLoadVideo (self) :
-    self.buttons_video = []
-    #Create an explorer file button
-    button_explorer = Button(
-        self.window,
-        text="Browse Files",
-        command=self.openFileNameVideo
-    )
-    self.buttons_video.append(button_explorer)
+    #Function that places all the main labels
+    def placeMainLabels(self):
+        self.header.grid(column=0, row=0)
+        self.body.grid(column=0, row=1)
+        self.footer.grid(column=0, row=2)
 
 
-  #Buttoms for the video label (canvas)
-  def buttonsLoadCsv (self) :
-    self.buttons_csv = []
-    #Create an explorer file button
-    button_explorer = Button(
-        self.window,
-        text="Browse Files",
-        command=self.openFileNameCsv
-    )
-    self.buttons_csv.append(button_explorer)
+    #Explorer label for the video file
+    def loadLabelExplorerVideo(self):
+        self.label_window_explorer_video = Label(self.body, text="Select a video File", width=100, height=3, fg="blue",
+            bg="white")
+        self.label_window_explorer_video.grid()
+        buttonBrowser = self.browserButtonVideo()
+        buttonBrowser.grid()
 
 
-  #Modify the Video canvas with the video path
-  def printLabelContentVideo (self) :
-    self.label_file_explorer_video.configure(text="Video selected: " + self.filename_video)
+    #Browser button for the video file
+    def browserButtonVideo(self):
+        browserButton = Button(self.body, text="Browse Files", command=self.openFileBrowserVideo, relief='groove')
+        return browserButton
 
 
-  #Modify the csv canvas with the csv path
-  def printLabelContentCsv (self) :
-    self.label_file_explorer_csv.configure(text="File csv selected: " + self.filename_csv)
+    #Browser button for the csv file
+    def browserButtonCsv(self):
+        browserButton = Button(self.body, text="Browse Files", command=self.openFileBrowserCsv, relief='groove')
+        return browserButton
 
 
-  #Place all buttoms from video and csv in the window
-  def buttonPlace (self) :
-    self.label_file_explorer_video.grid(column=1, row=1) #1
-    #self.label_space.grid(column=1, row=2) # row=2
-    for i in range (len(self.buttons_video)) :
-      self.buttons_video[i].grid(column=1, row=i+3) #i = 0 => row=3  
-    #self.label_space.grid(column=1, row=len(self.buttons_video)+3)  # len = 1 + 3=> row=
-    self.label_file_explorer_csv.grid(column=1, row=len(self.buttons_video)+3+1)  #len = 1 + 3 + 1 => row=5
-    for j in range (len(self.buttons_csv)) :
-      self.buttons_csv[j].grid(column=1, row=len(self.buttons_csv)+5+j) #len = 1 + 5 => row=6
-    self.label_submit_exit.grid(column=1, row=len(self.buttons_csv)+5+1)
-
-    #Create an exit button
-    button_exit = Button(
-        self.window,
-        text="Exit",
-        command=exit
-    )
-
-    #create an accept button
-    button_accept = Button(
-        self.window,
-        text="Accept",
-        command=self.destroyAndSend
-    )
-
-    button_accept.grid(column=1, row=len(self.buttons_csv)+6)
-    self.label_submit_exit.grid(column=1, row=len(self.buttons_csv)+6+1)	
-    button_exit.grid(column=1, row=len(self.buttons_csv)+6+1) #len = 1 + 6 => row=7
-
- 
-  def destroyAndSend (self) : 
-    if (self.filename_video is None or self.filename_csv is None) or (len(self.filename_csv) == 0 or len(self.filename_video) == 0) :
-      messagebox.showerror("Alert Message", message="You need to enter two files !")
-      return
-    self.window.destroy()
+    #File browser for the video file
+    def openFileBrowserCsv(self):
+        filename = filedialog.askopenfilename(initialdir="./", title="Select a CSV file",
+            filetypes=(("csv files", "*.csv"), ("Excel files", "*.xls"), ("All files", "*.*")))
+        self.filename_csv = filename
+        if self.filename_csv is not None and len(self.filename_video) != 0:
+            self.printLabelContentCsv()
 
 
-  ################## Getters and Setters ##################
+    #Explorer label for the csv file
+    def loadLabelExplorerCsv(self):
+        self.label_window_explorer_csv = Label(self.body, text="Select a CSV File", width=100, height=3, fg="blue",
+            bg="white")
+        self.label_window_explorer_csv.grid()
+        buttonBrowser = self.browserButtonCsv()
+        buttonBrowser.grid()
 
-  def getFileNameVideoAndCsvPath (self) :
-    return self.filename_video, self.filename_csv
+
+    #File browser for the video file
+    def openFileBrowserVideo(self):
+        filename = filedialog.askopenfilename(initialdir="./", title="Select a Video file",
+            filetypes=(("AVI videos", "*.avi"), ("mp4 videos", "*.mp4"), ("All files", "*.*")))
+        self.filename_video = filename
+        if self.filename_video is not None and len(self.filename_video) != 0:
+            self.printLabelContentVideo()
+
+
+    #Empty labels for the window aesthetic
+    def loadSpacesBody(self, text=""):
+        spaceLabel = Label(self.body, text=text, width=100, height=4, bg="white", fg="blue")
+        return spaceLabel
+
+
+    #Function that load and place all sub labels and buttons
+    def loadAndPlaceBodyLabels(self):
+        self.loadSpacesBody("Select and open the files needed to start").grid()
+        self.loadLabelExplorerVideo()
+        self.loadSpacesBody().grid()
+        self.loadLabelExplorerCsv()
+        self.loadSpacesBody().grid()
+
+
+    #Fuction for load buttons exit and next (accept)
+    def loadButtons(self):
+        self.buttons = []
+        button_exit = Button(self.footer, text="Exit", command=exit, width=45, relief='groove')
+        self.buttons.append(button_exit)
+        button_accept = Button(self.footer, text="Next", width=45, command=self.destroyAndSend, relief='groove')
+        self.buttons.append(button_accept)
+
+
+    #Place the exit & accept buttons in the fotter label
+    def placeFooterButtons(self):
+        i = 0
+        for button in self.buttons:
+            button.grid(column=i, row=0, padx=15, pady=15)
+            i += 1
+
+
+    #ensemble function for buttons
+    def loadAndPlaceFooterButtons(self):
+        self.loadButtons()
+        self.placeFooterButtons()
+
+
+    #Change the label video explorer window when a file is selected
+    def printLabelContentVideo(self):
+        self.label_window_explorer_video.configure(text="Video selected: " + self.filename_video)
+
+
+    #Change the label CSV file explorer window when a file is selected
+    def printLabelContentCsv(self):
+        self.label_window_explorer_csv.configure(text="File csv selected: " + self.filename_csv)
+
+
+    #Command function for the "Next" button
+    def destroyAndSend(self):
+        if (self.filename_video is None or self.filename_csv is None) or (
+                len(self.filename_csv) == 0 or len(self.filename_video) == 0):
+            messagebox.showerror("Alert Message", message="You need to enter two files !")
+            return
+        self.window.destroy()
+
+    #Getter for the filenames (video and csv) paths
+    def getFileVideoAndCsvPath(self):
+        print("File video: " + self.filename_video)
+        print("Csv File: " + self.filename_csv)
+        return self.filename_video, self.filename_csv
