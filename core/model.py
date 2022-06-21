@@ -1,6 +1,6 @@
 import pandas as pd
 from ui import browserFileWindow as br
-from ui import signalsWindow as sg
+from ui import signalsWindow as sw
 from core import connexion as cn
 
 class Model :
