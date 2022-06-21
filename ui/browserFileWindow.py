@@ -168,6 +168,7 @@ class BrowserFileWindow:
             return
         self.window.destroy()
 
+
     #Getter for the filenames (video and csv) paths
     def getFileVideoAndCsvPath(self):
         print("File video: " + self.filename_video)
