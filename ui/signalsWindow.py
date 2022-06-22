@@ -5,6 +5,7 @@ class SignalsWindow:
 
     # Constructor
     def __init__(self, filename_csv=None):
+        self.values = []
         self.readSource(filename_csv)  # We suppose the file is already verified
         self.window = Tk()
         self.initialiseWindow()
@@ -17,7 +18,7 @@ class SignalsWindow:
             self.data = pd.read_csv(filename_csv, index_col=0)
         elif filename_csv.endswith(".xlsx") or filename_csv.endswith(".xls"):
             self.data = pd.read_excel(filename_csv, index_col=0)
-        print("File successfully read")
+        print("File CSV successfully read")
 
 
     # Window init properties
@@ -112,13 +113,19 @@ class SignalsWindow:
         self.sub_canvas.bind('<Configure>', lambda e: self.sub_canvas.configure(scrollregion=self.sub_canvas.bbox("all")))
 
 
+
     def _loadCheckbuttonsSignals(self):
         self.signals = []
         for col_name in self.data.columns:
+            value = IntVar()
+            self.values.append(value)
             checkbutton_signal = Checkbutton(
                 self.second_frame,
                 text=col_name,
-                var=StringVar()
+                #var=cb,
+                variable=value,
+                onvalue=1,
+                offvalue=0
             )
             self.signals.append(checkbutton_signal)
         self.placeSignalsLabel()
@@ -140,11 +147,23 @@ class SignalsWindow:
             self.footer,
             text="Next",
             width=45,
-            command=exit,
+            command=self.submitValues,
             bg='white',
             relief='groove'
         )
         self.buttons.append(button_exit)
+
+
+    def submitValues (self) :
+        self.signals_selected = []
+        i = 0
+        for value in self.values :
+            if value.get() == 1 :
+                self.signals_selected.append(self.signals[i])
+                print(self.data.columns[i] + " [SELECTED]")
+            i+=1
+        print("Signals loaded and save it successfully")
+        self.window.destroy()
 
 
     # Place all signals on the signal_label
@@ -159,3 +178,7 @@ class SignalsWindow:
         for button in self.buttons:
             button.grid(column=i, row=0, padx=15, pady=15)
             i += 1
+
+
+    def getSignalsSelected (self) :
+        return self.signals_selected
