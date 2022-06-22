@@ -1,12 +1,12 @@
-import pandas as pd
 from tkinter import *
-from core import signal as sg
+import pandas as pd
 
 class SignalsWindow:
 
     # Constructor
     def __init__(self, filename_csv=None):
         self.readSource(filename_csv)  # We suppose the file is already verified
+        self.window = Tk()
         self.initialiseWindow()
         self.window.mainloop()
 
@@ -17,12 +17,11 @@ class SignalsWindow:
             self.data = pd.read_csv(filename_csv, index_col=0)
         elif filename_csv.endswith(".xlsx") or filename_csv.endswith(".xls"):
             self.data = pd.read_excel(filename_csv, index_col=0)
-        print("File readed successfully")
+        print("File successfully read")
 
 
-    # Window init propierties
+    # Window init properties
     def initialiseWindow(self):
-        self.window = Tk()
         self.window.title("Signals")
         self.window.geometry("707x503")
         self.window.config(background="white")
@@ -44,7 +43,7 @@ class SignalsWindow:
 
     # Initialise a label for the window header
     def initialiseHeaderLabel(self):
-        self.header_label = Label(
+        self.header = Label(
             self.window,
             text="Select all Signals to work with",
             width=100,
@@ -55,7 +54,7 @@ class SignalsWindow:
 
     # Initialise a label for the window body (signals)
     def initialiseBodyLabel(self):
-        self.signals_label = Label(
+        self.body = Label(
             self.window,
             width=100,
             height=24,
@@ -66,7 +65,7 @@ class SignalsWindow:
 
     # Initialise a label for the window buttons
     def initialiseBottonsLabel(self):
-        self.buttons_label = Label(
+        self.footer = Label(
             self.window,
             width=100,
             height=3,
@@ -74,11 +73,11 @@ class SignalsWindow:
         )
 
 
-    # Place by a grid method all main labels (label_text, signals_label, buttons_label)
+    # Place by a grid method all main labels (label_text, body, footer)
     def placeMainLabels(self):
-        self.header_label.grid(column=0, row=0)
-        self.signals_label.grid(column=0, row=1)
-        self.buttons_label.grid(column=0, row=2)
+        self.header.grid(column=0, row=0)
+        self.body.grid(column=0, row=1)
+        self.footer.grid(column=0, row=2)
 
 
     # Load all sub configs in main labels
@@ -89,7 +88,7 @@ class SignalsWindow:
 
     # Load sub label body
     def initialiseSubLabelBody(self):
-        self.main_frame = Frame(self.signals_label)
+        self.main_frame = Frame(self.body)
         self.main_frame.pack(fill=BOTH, expand=1)
 
         self.sub_canvas = Canvas(self.main_frame, bg="white", height=350, highlightbackground="white")
@@ -110,8 +109,7 @@ class SignalsWindow:
 
     def configSubCanvas(self):
         self.sub_canvas.configure(yscrollcommand=self.sb.set)
-        self.sub_canvas.bind('<Configure>',
-                             lambda e: self.sub_canvas.configure(scrollregion=self.sub_canvas.bbox("all")))
+        self.sub_canvas.bind('<Configure>', lambda e: self.sub_canvas.configure(scrollregion=self.sub_canvas.bbox("all")))
 
 
     def _loadCheckbuttonsSignals(self):
@@ -120,7 +118,7 @@ class SignalsWindow:
             checkbutton_signal = Checkbutton(
                 self.second_frame,
                 text=col_name,
-                var=BooleanVar()
+                var=StringVar()
             )
             self.signals.append(checkbutton_signal)
         self.placeSignalsLabel()
@@ -130,21 +128,19 @@ class SignalsWindow:
     def initialiseSubLabelButtons(self):
         self.buttons = []
         button_accept = Button(
-            self.buttons_label,
-            text="Accept",
+            self.footer,
+            text="Exit",
             width=45,
             command=exit,
-            # activebackground='orange',
             bg='white',
             relief='groove'
         )
         self.buttons.append(button_accept)
         button_exit = Button(
-            self.buttons_label,
-            text="exit",
+            self.footer,
+            text="Next",
             width=45,
             command=exit,
-            # activebackground='orange',
             bg='white',
             relief='groove'
         )
@@ -153,8 +149,6 @@ class SignalsWindow:
 
     # Place all signals on the signal_label
     def placeSignalsLabel(self):
-        # for signal, i in self.signals, len(self.signals):
-        #    signal.grid(column=0, row=i)
         for j in range(len(self.signals)):
             self.signals[j].grid(column=0, row=j)
 
@@ -165,4 +159,3 @@ class SignalsWindow:
         for button in self.buttons:
             button.grid(column=i, row=0, padx=15, pady=15)
             i += 1
-            

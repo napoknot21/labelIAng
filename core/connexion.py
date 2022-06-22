@@ -12,18 +12,18 @@ class Connexion :
 
   def checkAndLoadPandasFile(self):
       if os.path.exists(self.filename_csv) :
-          print("File founded successfully")
+          print("File CSV successfully founded")
           if ".csv" in self.filename_csv:
               self.data_csv = pd.read_csv(self.filename_csv)
-              print("File successfully loaded")
+              print("File CSV successfully loaded")
               return
           if ".xls" in self.filename_csv:
               self.data_csv = pd.read_excel(self.filename_csv)
-              print("File successfully loaded")
+              print("File CSV successfully loaded")
               return
           if ".xlsx" in self.filename_csv:
               self.data_csv = pd.read_excel(self.filename_csv)
-              print("File successfully loaded")
+              print("File CSV successfully loaded")
               return
           print("Illegal Format for the CSV file or format not supported")
       else :
