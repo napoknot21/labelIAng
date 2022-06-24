@@ -1,6 +1,6 @@
-from ui import browserFileWindow as br
-from ui import signalsWindow as sw
-from core import connexion as cn
+from src.ui import browserFileWindow as br
+from src.ui import signalsWindow as sw
+from src.core import connexion as cn
 
 class Model :
 

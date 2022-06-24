@@ -1,4 +1,4 @@
-from core import model as md
+from src.core import model as md
 
 class Launcher :
 
