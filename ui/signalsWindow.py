@@ -159,7 +159,7 @@ class SignalsWindow:
         i = 0
         for value in self.values :
             if value.get() == 1 :
-                self.signals_selected.append(self.signals[i])
+                self.signals_selected.append(self.data.columns[i])
                 print(self.data.columns[i] + " [SELECTED]")
             i+=1
         print("Signals loaded and save it successfully")
@@ -180,5 +180,6 @@ class SignalsWindow:
             i += 1
 
 
+    # Getter for the signals selected
     def getSignalsSelected (self) :
         return self.signals_selected

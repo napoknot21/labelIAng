@@ -3,6 +3,9 @@ import os
 
 class Connexion :
 
+    filename_csv: str
+    filename_video: str
+
     def __init__(self, filename_video, filename_csv):
         self.filename_video = filename_video
         self.filename_csv = filename_csv
@@ -13,15 +16,11 @@ class Connexion :
     def checkAndLoadPandasFile(self):
         if os.path.exists(self.filename_csv) :
             print("File CSV successfully founded")
-            if ".csv" in self.filename_csv:
+            if self.filename_csv.endswith(".csv"):
                 self.data_csv = pd.read_csv(self.filename_csv)
                 print("File CSV successfully loaded")
                 return
-            if ".xls" in self.filename_csv:
-                self.data_csv = pd.read_excel(self.filename_csv)
-                print("File EXCEL successfully loaded")
-                return
-            if ".xlsx" in self.filename_csv:
+            if self.filename_csv.endswith(".xls") or self.filename_csv.endswith(".xlsx"):
                 self.data_csv = pd.read_excel(self.filename_csv)
                 print("File EXCEL successfully loaded")
                 return
@@ -35,7 +34,9 @@ class Connexion :
     def checkAndLoadVideoFile(self):
         if os.path.exists(self.filename_video):
             print("Video successfully founded")
-            if ".mp4" in self.filename_video or ".mov" in self.filename_video or ".mwv" in self.filename_video or ".flv" in self.filename_video or ".avi" in self.filename_video or ".mkv" in self.filename_video:
+            if self.filename_video.endswith(".mp4") or self.filename_video.endswith(".mov") \
+                    or self.filename_video.endswith(".mwv") or self.filename_video.endswith(".flv") \
+                    or self.filename_video.endswith(".avi") or self.filename_video.endswith(".mkv"):
                 print("Video successfully loaded")
                 # self.data_video = vd.Video(self.filename_video)
                 return
