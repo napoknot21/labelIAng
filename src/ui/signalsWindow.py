@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 import pandas as pd
 
 class SignalsWindow:
@@ -6,6 +7,7 @@ class SignalsWindow:
     # Constructor
     def __init__(self, filename_csv=None):
         self.values = []
+        self.signals_selected = None
         self.readSource(filename_csv)  # We suppose the file is already verified
         self.window = Tk()
         self.initialiseWindow()
@@ -17,7 +19,7 @@ class SignalsWindow:
         if filename_csv.endswith(".csv"):
             self.data = pd.read_csv(filename_csv, index_col=0)
         elif filename_csv.endswith(".xlsx") or filename_csv.endswith(".xls"):
-            self.data = pd.read_excel(filename_csv, index_col=0)
+            self.data = pd.read_excel(filename_csv, index_col=0 )
         print("File CSV successfully read")
 
 
@@ -26,6 +28,7 @@ class SignalsWindow:
         self.window.title("Signals")
         self.window.geometry("707x503")
         self.window.config(background="white")
+        self.loadIconWindow("src/ui/.images/icon.png")
         self.window.resizable(False, False)
 
         self.loadProperties()
@@ -33,6 +36,14 @@ class SignalsWindow:
 
         self.loadSubProperties()
         self.placeButtonsSubLabel()
+
+        self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+
+    # Import an images and put it as icon window
+    def loadIconWindow(self, filePath):
+        p1 = PhotoImage(file=filePath)
+        self.window.iconphoto(False, p1)
 
 
     # Load all main window properties
@@ -138,7 +149,7 @@ class SignalsWindow:
             self.footer,
             text="Exit",
             width=45,
-            command=exit,
+            command=self.on_closing,
             bg='white',
             relief='groove'
         )
@@ -162,8 +173,7 @@ class SignalsWindow:
                 self.signals_selected.append(self.data.columns[i])
                 print(self.data.columns[i] + " [SELECTED]")
             i+=1
-        print("Signals loaded and save it successfully")
-        self.window.destroy()
+        self.destroyAndSend()
 
 
     # Place all signals on the signal_label
@@ -179,6 +189,23 @@ class SignalsWindow:
             button.grid(column=i, row=0, padx=15, pady=15)
             i += 1
 
+
+    # Command function for the "Next" button
+    def destroyAndSend(self):
+        if self.signals_selected is None :
+            messagebox.showerror("Alert Message", message="You need to check at leadt one signal")
+            return
+        if len(self.signals_selected) == 0 :
+            messagebox.showerror("Alert Message", message="You need to check at least one signal")
+            return
+        print("Signals loaded and save it successfully")
+        self.window.destroy()
+
+
+    # Alert messages for closing the window
+    def on_closing(self):
+        if messagebox.askokcancel("Quit", "Do you really want to quit ?"):
+            exit(0)
 
     # Getter for the signals selected
     def getSignalsSelected (self) :

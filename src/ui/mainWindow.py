@@ -1,7 +1,12 @@
 from tkinter import *
-
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.mlab as mlab
+import matplotlib.gridspec as gridspec
 
 class MainWindow:
+
+    np.random.seed(19680801)
 
     def __init__(self, signals_selected=None, filename_video=None, labels_entered=None):
         self.signals_selected = signals_selected
@@ -108,6 +113,6 @@ class MainWindow:
                 self.body,
                 bg="pink"
             )
-            signal_label.place(relx=0.003, rely=space + rely, relwidth=.985, relheigh=height)
+            signal_label.place(relx=0.003, rely=space+ rely, relwidth=.985, relheigh=height)
             space += space
             rely += height

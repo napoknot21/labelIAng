@@ -27,7 +27,7 @@ class LabelsWindow:
         self.window.title("Video app")
         self.window.geometry("707x500")
         self.window.config(background="white")
-        self.loadIconWindow("ui/.images/icon.png")
+        self.loadIconWindow("src/ui/.images/icon.png")
         self.window.resizable(False, False)
 
 

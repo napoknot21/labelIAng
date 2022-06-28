@@ -16,6 +16,7 @@ class BrowserFileWindow:
         # Buttons and sub label settings
         self.loadAndPlaceBodyLabels()
         self.loadAndPlaceFooterButtons()
+        self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.window.mainloop()
 
 
@@ -24,7 +25,7 @@ class BrowserFileWindow:
         self.window.title("Video app")
         self.window.geometry("707x500")
         self.window.config(background="white")
-        self.loadIconWindow("src/ui/.images/icon.png")
+        self.loadIconWindow("ui/.images/icon.png")
         self.window.resizable(False, False)
 
 
@@ -36,7 +37,7 @@ class BrowserFileWindow:
 
     # Header initialization
     def initHeaderLabel(self):
-        self.header = Label(self.window, text="VIDEO APP 1.0", width=100, height=5, fg="blue")
+        self.header = Label(self.window, text="VIDEO APP [BETA]", width=100, height=5, fg="blue")
 
 
     # Body initialization
@@ -158,7 +159,7 @@ class BrowserFileWindow:
     # Function for load buttons exit and next (accept)
     def loadButtons(self):
         self.buttons = []
-        button_exit = Button(self.footer, text="Exit", command=exit, width=45, relief='groove', bg="white")
+        button_exit = Button(self.footer, text="Exit", command=self.on_closing, width=45, relief='groove', bg="white")
         self.buttons.append(button_exit)
         button_accept = Button(self.footer, text="Next", width=45, command=self.destroyAndSend, relief='groove', bg="white")
         self.buttons.append(button_accept)
@@ -197,8 +198,19 @@ class BrowserFileWindow:
         self.window.destroy()
 
 
+    # Alert messages for closing the window
+    def on_closing(self):
+        if self.filename_csv is not None or self.filename_video is not None :
+            if messagebox.askokcancel("Quit", "Do you really want to quit ?"):
+                self.window.destroy()
+        else :
+            self.window.destroy()
+
+
     # Getter for the filenames (video and csv) paths
     def getFileVideoAndCsvPath(self):
-        print("File video: " + self.filename_video)
-        print("Csv File: " + self.filename_csv)
+        video = self.filename_video if self.filename_video is not None else "None"
+        csv = self.filename_csv if self.filename_csv is not None else "None"
+        print("File video: " + video)
+        print("Csv File: " + csv)
         return self.filename_video, self.filename_csv
