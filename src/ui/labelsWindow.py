@@ -1,4 +1,6 @@
 from tkinter import *
+import numpy as np
+from src.core import label as lb
 
 class LabelsWindow:
 
@@ -7,9 +9,14 @@ class LabelsWindow:
         self.initWindow()
         self.loadAndPlaceMainLabels()
         self.loadAndPlaceFooterButtons()
-        self.subSelectLabelsNumber()
-        self.loadAndPLaceBodylabels()
-        self.menuSelector()
+        #self.subSelectLabelsNumber()
+        #self.loadAndPLaceBodylabels()
+        #self.menuSelector()
+        self.colorsArray = []
+        self.idsArray = []
+        self.namesArray = []
+
+        self.labelsArray = []
 
 
         self.window.mainloop()
@@ -20,7 +27,7 @@ class LabelsWindow:
         self.window.title("Video app")
         self.window.geometry("707x500")
         self.window.config(background="white")
-        self.loadIconWindow("src/ui/.images/icon.png")
+        self.loadIconWindow("ui/.images/icon.png")
         self.window.resizable(False, False)
 
 
@@ -60,7 +67,7 @@ class LabelsWindow:
         self.footer.grid(column=0, row=2)
 
 
-    def subSelectLabelsNumber(self):
+    """def subSelectLabelsNumber(self):
         self.labelsNumber = Label(
             self.body,
             bg='white',
@@ -100,12 +107,27 @@ class LabelsWindow:
 
     def loadAndPLaceBodylabels (self) :
         self.subBodyLabelTextAndMenu()
+"""
+
+    def generateRandomColors (self) :
+        random_color = list(np.random.choice(range(255), size=3))
+        if not self.__searchElement(random_color) :
+            self.colorsArray.append(random_color)
+            return
+        self.generateRandomColors()
 
 
-
-
-
-
+    def __searchElement (self, random_color) :
+        if not self.colorsArray:
+            return False
+        for i in range(len(self.colorsArray)):
+            cmpt = 0
+            for j in range(3):
+                if self.colorsArray[i][j] == random_color[j]:
+                    cmpt += 1
+            if cmpt == 3 :
+                return True
+        return False
 
 
     def loadButtons(self):
