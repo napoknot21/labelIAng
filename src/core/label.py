@@ -4,7 +4,7 @@ class Label:
     def __init__(self, id, name, color):
         self.id = id
         self.name = name
-        self.color = color  # color array
+        self.color = color  # color in hexadecimal format
 
 
     # Setter for the ID
@@ -31,21 +31,14 @@ class Label:
     # Check if the format color is ok (array size is 3)
     def checkColor(self, color):
         if color is None: return False
-        if len(color) == 3:
-            return True
-        return False
+        if len(color) != 7:
+            return False
+        return True if color[0] == '#' else False
 
 
     # Return True if the argument color and the self.Color are the same, else False
     def sameColors(self, color):
-        # We suppose the format color (array size is 3)
-        cmpt = 0
-        for i in range(3):
-            if self.color[i] == color[i]:
-                cmpt += 1
-        if cmpt == 3:
-            return True
-        return False
+        return True if color == self.color else False
 
 
     def getName(self):
