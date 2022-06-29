@@ -9,14 +9,13 @@ class LabelsWindow:
         self.initWindow()
         self.loadAndPlaceMainLabels()
         self.loadAndPlaceFooterButtons()
-        #self.subSelectLabelsNumber()
-        #self.loadAndPLaceBodylabels()
-        #self.menuSelector()
+       
         self.colorsArray = []
         self.idsArray = []
         self.namesArray = []
 
         self.labelsArray = []
+        self.graphicsArray = []
 
 
         self.window.mainloop()
@@ -53,7 +52,7 @@ class LabelsWindow:
 
 
     # Function initialization for all main label initialization functions
-    def loadMainLabels(self):
+    def __loadMainLabels(self):
         self.initHeaderLabel()
         self.initBodyLabel()
         self.initFooterLabel()
@@ -61,53 +60,11 @@ class LabelsWindow:
 
     # Function that places all the main labels
     def loadAndPlaceMainLabels(self):
-        self.loadMainLabels()
+        self.__loadMainLabels()
         self.header.grid(column=0, row=0)
         self.body.grid(column=0, row=1)
         self.footer.grid(column=0, row=2)
 
-
-    """def subSelectLabelsNumber(self):
-        self.labelsNumber = Label(
-            self.body,
-            bg='white',
-            width=100,
-            height=4,
-        )
-        self.labelsNumber.grid()
-
-
-    def subBodyLabelTextAndMenu (self) :
-        self.text_body = Label(
-            self.labelsNumber,
-            text="Select number of labels",
-            fg="blue",
-            bg="white"
-        )
-        self.text_body.grid(column=0, row=0)
-        self.menu_body = Label (
-            self.labelsNumber,
-            fg="blue",
-            bg="white"
-        )
-        self.menu_body.grid(column=1, row=0)
-
-    def menuSelector (self) :
-        self.optionList = []
-        for i in range (100) :
-            self.optionList += [i]
-        var = StringVar(self.menu_body)
-        var.set(self.optionList[0])
-        self.optionMenu = OptionMenu(
-            self.menu_body,
-            var,
-            *self.optionList
-        )
-        self.optionMenu.pack()
-
-    def loadAndPLaceBodylabels (self) :
-        self.subBodyLabelTextAndMenu()
-"""
 
     def generateRandomColors (self) :
         random_color = list(np.random.choice(range(255), size=3))

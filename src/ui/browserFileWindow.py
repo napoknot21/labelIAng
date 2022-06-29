@@ -16,6 +16,7 @@ class BrowserFileWindow:
         # Buttons and sub label settings
         self.loadAndPlaceBodyLabels()
         self.loadAndPlaceFooterButtons()
+        #Window warnign about to close it
         self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.window.mainloop()
 
@@ -118,7 +119,7 @@ class BrowserFileWindow:
                 ("All files", "*.*")
             )
         )
-        self.filename_video = filename
+        self.setFilePathVideo(filename)
         if self.filename_video is not None:
             if len(self.filename_video) != 0:
                 self.printLabelContentVideo()
@@ -135,7 +136,7 @@ class BrowserFileWindow:
                 ("All files", "*.*")
             )
         )
-        self.filename_csv = filename
+        self.setFilePathCsv(filename)
         if self.filename_csv is not None :
             if len(self.filename_csv) != 0:
                 self.printLabelContentCsv()
@@ -214,3 +215,17 @@ class BrowserFileWindow:
         print("File video: " + video)
         print("Csv File: " + csv)
         return self.filename_video, self.filename_csv
+
+
+    #Setter fot the video file path
+    def setFilePathVideo (self, filename_video):
+        if filename_video is not None :
+            if len(filename_video) != 0 :
+                self.filename_video = filename_video
+
+
+    #Setter for the csv file path
+    def setFilePathCsv (self, filename_csv) :
+        if filename_csv is not None :
+            if len(filename_csv) != 0 :
+                self.filename_csv = filename_csv 
