@@ -2,6 +2,7 @@ from faulthandler import cancel_dump_traceback_later
 from random import random
 from tkinter import *
 from tkinter.colorchooser import *
+from turtle import width
 from matplotlib.pyplot import title
 import numpy as np
 from src.core import label as lb
@@ -24,6 +25,7 @@ class LabelsWindow:
         self.loadAndPlaceSubBodyWidgets()
 
         self.loadAndPlaceHeaderLabel()
+        self.LoadAndPlaceGraphicalLabels()
 
         self.window.mainloop()
 
@@ -142,7 +144,7 @@ class LabelsWindow:
         color_label.place(relwidth=.02, relx=.11, rely=0)
         icon_delete_label = Label(
             label_header,
-            height=4,
+            height=2,
             bg="white"
         )
         icon_delete_label.place(relwidth=.02, rely=0, relx=.13)
@@ -162,17 +164,17 @@ class LabelsWindow:
         label_block = Label (
             self.labels_frame,
             width=675,
-            height=3,
+            height=4,
             bg="blue",
             fg="blue"
         )
 
         id_label = Label (
             label_block,
-            height=3,
+            height=4,
             bg="black"
         )
-        id_label.place(relwidth=.02, relx=0, rely=0)
+        id_label.place(relwidth=.02, relheight=1, relx=0, rely=0)
         id_entry = self.__loadEntryText(id_label)
         id_entry.pack()
         id_entry.insert(END, label.getId())
@@ -180,36 +182,44 @@ class LabelsWindow:
 
         name_label = Label(
             label_block,
-            height=3,
+            height=4,
             bg="green"
         )
-        name_label.place(relwidth=.09, relx=.02, rely=0)
-        name_entry = self.__loadEntryText(name_label)
+        name_label.place(relwidth=.09, relheight=1, relx=.02, rely=0)
+        name_entry = self.__loadEntryText(name_label, width=35)
         name_entry.pack()
         name_entry.insert(END, 'Enter the label name' )
         lambda e : lb.setName(name_entry.get())
 
         color_label = Label(
             label_block,
-            height=3,
+            height=4,
             bg="red"
         )
-        color_label.place(relwidth=.02, relx=.11, rely=0)
+        color_label.place(relwidth=.02, relheight=1, relx=.11, rely=0)
         
         color_canvas = Canvas (
             color_label,
-            height=2
+            height=3,
+            width=5,
+            bg=str(label.getColor())
         )
-
-        
-
+        color_button = self.__loadButtonSelectorColor(color_label, color_canvas, label)
+        color_canvas.grid()
+        color_button.grid()
         icon_delete_label = Label(
             label_block,
-            height=3,
+            height=4,
             bg="pink"
         )
-        icon_delete_label.place(relwidth=.02, rely=0, relx=.13)
-        return label_block  
+        icon_delete_label.place(relwidth=.02, relheight=1, rely=0, relx=.13)
+        return label_block
+
+
+    def LoadAndPlaceGraphicalLabels (self) :
+        for i in range (10) :
+            label = self.__loadGraphicLabelBlock(i,self.generateRandomColors())
+            label.grid(column=0, row=i+1)  
 
 
     # Load and generate a entry fot any label (parentWindow )
@@ -223,28 +233,33 @@ class LabelsWindow:
 
     
     # Button selector for changing the canvas color of canvas_colored
-    def __loadButtonSelectorColor (self, parentWindow, canvas_colored) :
+    def __loadButtonSelectorColor (self, parentWindow, canvas_colored, label) :
         button_color = Button(
             parentWindow,
             text="Change",
-            command=lambda : canvas_colored.configure(bg=self.__colorBrowserChange)
+            command=lambda : canvas_colored.configure(bg=self.__colorBrowserChange(label))
         )
         return button_color
 
 
     # Color browser 
-    def __colorBrowserChange (self):
+    def __colorBrowserChange (self, label):
         color = askcolor(title="Select a new Color")
         if not self.__searchElement(color[1]) :
+            label.setColor(color[1])
             return color[1]
 
 
     # Generate a new random color
     def generateRandomColors (self) :
-        random_color = list(np.random.choice(range(255), size=3))
+        random_color = tuple(np.random.choice(range(255), size=3))
+        print(random_color)
+        print(type(random_color))
+        random_color = "#" + str('%02x%02x%02x' % random_color)
+        print("new color => " + random_color)
         if not self.__searchElement(random_color) :
             self.colorsArray.append(random_color)
-            return
+            return random_color
         self.generateRandomColors()
 
 
@@ -261,7 +276,7 @@ class LabelsWindow:
         self.buttons = []
         button_exit = Button(self.footer, text="Exit", command=exit, width=45, relief='groove', bg="white")
         self.buttons.append(button_exit)
-        button_accept = Button(self.footer, text="Next", width=45, command=exit, relief='groove', bg="white")
+        button_accept = Button(self.footer, text="Next", width=45, command=lambda : self.window.destroy(), relief='groove', bg="white")
         self.buttons.append(button_accept)
 
 

@@ -103,7 +103,7 @@ class SignalsWindow:
         self.main_frame = Frame(self.body)
         self.main_frame.pack(fill=BOTH, expand=1)
 
-        self.sub_canvas = Canvas(self.main_frame, bg="white", height=350, highlightbackground="white")
+        self.sub_canvas = Canvas(self.main_frame, bg="white", height=350, highlightbackground="white", width=675)
         self.sub_canvas.pack(side=LEFT, fill=BOTH, expand=1)
 
         self.sb = Scrollbar(
@@ -114,8 +114,8 @@ class SignalsWindow:
         self.sb.pack(side=RIGHT, fill=Y)
         self.configSubCanvas()
 
-        self.second_frame = Frame(self.sub_canvas, bg="white", height=350, highlightbackground="white")
-        self.sub_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
+        self.second_frame = Frame(self.sub_canvas, bg="white", height=350, highlightbackground="white", width=675)
+        self.sub_canvas.create_window((190, 0), window=self.second_frame, anchor="nw")
         self._loadCheckbuttonsSignals()
 
 
@@ -133,7 +133,8 @@ class SignalsWindow:
             checkbutton_signal = Checkbutton(
                 self.second_frame,
                 text=col_name,
-                #var=cb,
+                bg="white",
+                fg="blue",
                 variable=value,
                 onvalue=1,
                 offvalue=0
@@ -193,12 +194,12 @@ class SignalsWindow:
     # Command function for the "Next" button
     def destroyAndSend(self):
         if self.signals_selected is None :
-            messagebox.showerror("Alert Message", message="You need to check at leadt one signal")
+            messagebox.showerror("Alert Message", message="You need to check at least one signal")
             return
         if len(self.signals_selected) == 0 :
             messagebox.showerror("Alert Message", message="You need to check at least one signal")
             return
-        print("Signals loaded and save it successfully")
+        print("Signals loaded and saved successfully")
         self.window.destroy()
 
 
