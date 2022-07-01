@@ -51,3 +51,10 @@ class Label:
 
     def getColor(self):
         return self.color
+
+
+    def toString (self):
+        id = self.getId() if self.id is not None else 0
+        name = self.getName() if self.name is not None else "None"
+        color = self.getColor() if self.color is not None else "No Color"
+        print("ID => {}, name =>  {}, color => {}".format(str(id), name, color))

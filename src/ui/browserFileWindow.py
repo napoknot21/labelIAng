@@ -38,32 +38,27 @@ class BrowserFileWindow:
 
     # Header initialization
     def initHeaderLabel(self):
-        self.header = Label(self.window, text="VIDEO APP [BETA]", width=100, height=5, fg="blue")
+        self.header = Label(self.window, text="VIDEO APP [BETA]", fg="blue")
 
 
     # Body initialization
     def initBodyLabel(self):
-        self.body = Label(self.window, width=100, height=24, bg="white", fg="blue")
+        self.body = Label(self.window, bg="white", fg="blue")
 
 
     # Footer initialization
     def initFooterLabel(self):
-        self.footer = Label(self.window, width=100, height=4, fg="blue")
-
-
-    # Function initialization for all main label initialization functions
-    def loadMainLabels(self):
-        self.initHeaderLabel()
-        self.initBodyLabel()
-        self.initFooterLabel()
+        self.footer = Label(self.window, fg="blue")
 
 
     # Function that places all the main labels
     def loadAndPlaceMainLabels(self) :
-        self.loadMainLabels()
-        self.header.grid(column=0, row=0)
-        self.body.grid(column=0, row=1)
-        self.footer.grid(column=0, row=2)
+        self.initHeaderLabel()
+        self.initBodyLabel()
+        self.initFooterLabel()
+        self.header.place(relwidth=1, relheight=.159, relx=0, rely=0)
+        self.body.place(relwidth=1, relheight=.72, relx=0, rely=0.159 )
+        self.footer.place(relwidth=1, relheight=.121, relx=0, rely=0.879)
 
 
     # Explorer label for the video file
@@ -71,14 +66,12 @@ class BrowserFileWindow:
         self.label_window_explorer_video = Label(
             self.body,
             text="Select a video File",
-            width=100,
-            height=3,
             fg="blue",
             bg="white"
         )
-        self.label_window_explorer_video.grid()
+        self.label_window_explorer_video.place(relwidth=1, relheight=.15, relx=0, rely=0.20)
         buttonBrowser = self.browserButtonVideo()
-        buttonBrowser.grid()
+        buttonBrowser.place(rely=0.38, relx=0.5, anchor=CENTER)
 
 
     # Explorer label for the csv file
@@ -86,25 +79,23 @@ class BrowserFileWindow:
         self.label_window_explorer_csv = Label(
             self.body,
             text="Select a CSV File",
-            width=100,
-            height=3,
             fg="blue",
             bg="white"
         )
-        self.label_window_explorer_csv.grid()
+        self.label_window_explorer_csv.place(relwidth=1, relheight=0.15, relx=0, rely=0.6)
         buttonBrowser = self.browserButtonCsv()
-        buttonBrowser.grid()
+        buttonBrowser.place(rely=.78, relx= 0.5, anchor=CENTER)
 
 
     # Browser button for the video file
     def browserButtonVideo(self):
-        browserButton = Button(self.body, text="Browse Files", command=self.openFileBrowserVideo, relief='groove')
+        browserButton = Button(self.body, text="Browse Files", command=self.openFileBrowserVideo, relief='groove', height=1)
         return browserButton
 
 
     # Browser button for the csv file
     def browserButtonCsv(self):
-        browserButton = Button(self.body, text="Browse Files", command=self.openFileBrowserCsv, relief='groove')
+        browserButton = Button(self.body, text="Browse Files", command=self.openFileBrowserCsv, relief='groove', height=1)
         return browserButton
 
 
@@ -144,38 +135,46 @@ class BrowserFileWindow:
 
     # Empty labels for the window aesthetic
     def loadSpacesBody(self, text=""):
-        spaceLabel = Label(self.body, text=text, width=100, height=4, bg="white", fg="blue")
+        spaceLabel = Label(self.body, text=text, bg="white", fg="blue")
         return spaceLabel
 
 
     # Function that load and place all sub labels and buttons
     def loadAndPlaceBodyLabels(self):
-        self.loadSpacesBody("Select and open the files needed to start").grid()
+        self.loadSpacesBody("Select and open the files needed to start").place(relwidth=1, relheight=.20, relx=0, rely=0)
         self.loadLabelExplorerVideo()
-        self.loadSpacesBody().grid()
+        self.loadSpacesBody().place(relwidth=1, relheight=.18, relx=0, rely=.42)
         self.loadLabelExplorerCsv()
-        self.loadSpacesBody().grid()
+        self.loadSpacesBody().place(relwidth=1, relheight=.18, relx=0, rely=0.82)
+
+
+    # Place the exit & accept buttons in the fotter label
+    def loadSubLabelFooter(self):
+        self.label_exit = Label(self.footer)
+        self.label_exit.place(relheight=1, relwidth=.5, relx=0, rely=0)
+
+        self.label_accept = Label(self.footer,)
+        self.label_accept.place(relheight=1, relwidth=.5, relx=0.5, rely=0)
 
 
     # Function for load buttons exit and next (accept)
     def loadButtons(self):
         self.buttons = []
-        button_exit = Button(self.footer, text="Exit", command=self.on_closing, width=45, relief='groove', bg="white")
+        button_exit = Button(self.label_exit, text="Exit", command=self.on_closing, relief='groove', bg="white", width=40)
         self.buttons.append(button_exit)
-        button_accept = Button(self.footer, text="Next", width=45, command=self.destroyAndSend, relief='groove', bg="white")
+        button_accept = Button(self.label_accept, text="Next", command=self.destroyAndSend, relief='groove', bg="white", width=40)
         self.buttons.append(button_accept)
 
 
-    # Place the exit & accept buttons in the fotter label
+    # Place all footer buttons in the current label
     def placeFooterButtons(self):
-        i = 0
         for button in self.buttons:
-            button.grid(column=i, row=0, padx=15, pady=15)
-            i += 1
+            button.place(relx=.5, rely=0.5, anchor=CENTER)
 
 
     # ensemble function for buttons
     def loadAndPlaceFooterButtons(self):
+        self.loadSubLabelFooter()
         self.loadButtons()
         self.placeFooterButtons()
 

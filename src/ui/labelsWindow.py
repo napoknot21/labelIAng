@@ -1,10 +1,10 @@
-from faulthandler import cancel_dump_traceback_later
 from random import random
 from tkinter import *
 from tkinter.colorchooser import *
-from turtle import width
+from tkinter import messagebox
 from matplotlib.pyplot import title
 import numpy as np
+from pyparsing import replaceWith
 from src.core import label as lb
 
 class LabelsWindow:
@@ -26,6 +26,8 @@ class LabelsWindow:
 
         self.loadAndPlaceHeaderLabel()
         self.LoadAndPlaceGraphicalLabels()
+
+        self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         self.window.mainloop()
 
@@ -70,9 +72,9 @@ class LabelsWindow:
     # Function that places all the main labels
     def loadAndPlaceMainLabels(self):
         self.__loadMainLabels()
-        self.header.grid(column=0, row=0)
-        self.body.grid(column=0, row=1)
-        self.footer.grid(column=0, row=2)
+        self.header.place(relwidth=1, relheight=.159, relx=0, rely=0)
+        self.body.place(relwidth=1, relheight=.72, relx=0, rely=0.159 )
+        self.footer.place(relwidth=1, relheight=.121, relx=0, rely=0.879 )
 
 
     # Load all sub-body labels in the window (scrollbar, canvas)
@@ -160,59 +162,58 @@ class LabelsWindow:
     # Load and generate a graphic label bloc 
     def __loadGraphicLabelBlock (self, defaultId, defaultColor) :
         label = lb.Label(id=defaultId, name=None, color=defaultColor)
-
+        self.labelsArray.append(label)
         label_block = Label (
             self.labels_frame,
             width=675,
             height=4,
-            bg="blue",
+            bg="white",
             fg="blue"
         )
 
         id_label = Label (
             label_block,
-            height=4,
-            bg="black"
         )
         id_label.place(relwidth=.02, relheight=1, relx=0, rely=0)
-        id_entry = self.__loadEntryText(id_label)
-        id_entry.pack()
-        id_entry.insert(END, label.getId())
-        lambda e : lb.setId(id_entry.get())
+        id_var = id
+        id_entry = self.__loadEntryText(id_label, var=id_var)
+        id_entry.place(relx=.5, rely=.5, anchor=CENTER)
+        #id_entry.insert(END, label.getId())
+        #lambda e : label.setId(id_entry.get())
 
         name_label = Label(
             label_block,
-            height=4,
-            bg="green"
         )
         name_label.place(relwidth=.09, relheight=1, relx=.02, rely=0)
-        name_entry = self.__loadEntryText(name_label, width=35)
-        name_entry.pack()
-        name_entry.insert(END, 'Enter the label name' )
-        lambda e : lb.setName(name_entry.get())
+
+        name_var = "Enter the label name"
+        name_entry = self.__loadEntryText(name_label, var=name_var, width=35)
+        name_entry.place(relx=.5, rely=.5, anchor=CENTER)
+        #name_entry.insert(END, 'Enter the label name' )
+        #lambda e : label.setName(name_entry.get())
 
         color_label = Label(
-            label_block,
-            height=4,
-            bg="red"
+            label_block
         )
         color_label.place(relwidth=.02, relheight=1, relx=.11, rely=0)
         
         color_canvas = Canvas (
             color_label,
-            height=3,
-            width=5,
             bg=str(label.getColor())
         )
+        color_canvas.place(relx=.5, rely=.2, relwidth=.5, relheight=.6, anchor=CENTER)
+
         color_button = self.__loadButtonSelectorColor(color_label, color_canvas, label)
-        color_canvas.grid()
-        color_button.grid()
+        color_button.place(relx=.5, rely=.7, anchor=CENTER)
+
         icon_delete_label = Label(
             label_block,
-            height=4,
-            bg="pink"
         )
         icon_delete_label.place(relwidth=.02, relheight=1, rely=0, relx=.13)
+
+        button_delete = Button(icon_delete_label, text="Delete label", command= lambda e : label_block.destroy())
+        button_delete.place(relx=.5, rely=.5, anchor=CENTER)
+        
         return label_block
 
 
@@ -223,10 +224,11 @@ class LabelsWindow:
 
 
     # Load and generate a entry fot any label (parentWindow )
-    def __loadEntryText (self, parentWindow, height=1, width=3) :
-        text = Text (
+    def __loadEntryText (self, parentWindow, var, width=3) :
+        text = Entry (
             parentWindow,
-            height=height,
+            textvariable=var,
+            #height=height,
             width=width
         )
         return text
@@ -253,10 +255,7 @@ class LabelsWindow:
     # Generate a new random color
     def generateRandomColors (self) :
         random_color = tuple(np.random.choice(range(255), size=3))
-        print(random_color)
-        print(type(random_color))
         random_color = "#" + str('%02x%02x%02x' % random_color)
-        print("new color => " + random_color)
         if not self.__searchElement(random_color) :
             self.colorsArray.append(random_color)
             return random_color
@@ -276,7 +275,7 @@ class LabelsWindow:
         self.buttons = []
         button_exit = Button(self.footer, text="Exit", command=exit, width=45, relief='groove', bg="white")
         self.buttons.append(button_exit)
-        button_accept = Button(self.footer, text="Next", width=45, command=lambda : self.window.destroy(), relief='groove', bg="white")
+        button_accept = Button(self.footer, text="Next", width=45, command=lambda : self.showAllLabels() , relief='groove', bg="white")
         self.buttons.append(button_accept)
 
 
@@ -290,6 +289,18 @@ class LabelsWindow:
     def loadAndPlaceFooterButtons(self):
         self.__loadButtons()
         self.__placeFooterButtons()
+
+
+    def on_closing (self):
+        if messagebox.askokcancel("Quit", "Do you really want to quit ?"):
+            self.window.destroy()
+
+
+    def showAllLabels (self):
+        if self.labelsArray is not None or len(self.labelsArray) != 0:
+            for label in self.labelsArray :
+                label.toString()
+            self.window.destroy()
 
 
     def getLabels (self) :

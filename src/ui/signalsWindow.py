@@ -58,8 +58,6 @@ class SignalsWindow:
         self.header = Label(
             self.window,
             text="Select all Signals to work with",
-            width=100,
-            height=5,
             fg="blue",
         )
 
@@ -68,8 +66,6 @@ class SignalsWindow:
     def initialiseBodyLabel(self):
         self.body = Label(
             self.window,
-            width=100,
-            height=24,
             bg="white",
             fg="Blue",
         )
@@ -79,22 +75,22 @@ class SignalsWindow:
     def initialiseBottonsLabel(self):
         self.footer = Label(
             self.window,
-            width=100,
-            height=3,
             fg="blue"
         )
 
 
     # Place by a grid method all main labels (label_text, body, footer)
     def placeMainLabels(self):
-        self.header.grid(column=0, row=0)
-        self.body.grid(column=0, row=1)
-        self.footer.grid(column=0, row=2)
+        self.header.place(relwidth=1, relheight=.159, relx=0, rely=0)
+        self.body.place(relwidth=1, relheight=.72, relx=0, rely=0.159 )
+        self.footer.place(relwidth=1, relheight=.121, relx=0, rely=0.879)
+
 
 
     # Load all sub configs in main labels
     def loadSubProperties(self):
         self.initialiseSubLabelBody()
+        self.loadSubLabelFooter()
         self.initialiseSubLabelButtons()
 
 
@@ -143,11 +139,20 @@ class SignalsWindow:
         self.placeSignalsLabel()
 
 
+    # Place the exit & accept buttons in the fotter label
+    def loadSubLabelFooter(self):
+        self.label_exit = Label(self.footer)
+        self.label_exit.place(relheight=1, relwidth=.5, relx=0, rely=0)
+
+        self.label_accept = Label(self.footer,)
+        self.label_accept.place(relheight=1, relwidth=.5, relx=0.5, rely=0)
+
+
     # Initialise the buttons "Accept" and "Exit" for the button_label
     def initialiseSubLabelButtons(self):
         self.buttons = []
         button_accept = Button(
-            self.footer,
+            self.label_exit,
             text="Exit",
             width=45,
             command=self.on_closing,
@@ -156,7 +161,7 @@ class SignalsWindow:
         )
         self.buttons.append(button_accept)
         button_exit = Button(
-            self.footer,
+            self.label_accept,
             text="Next",
             width=45,
             command=self.submitValues,
@@ -185,10 +190,8 @@ class SignalsWindow:
 
     # Place the "accpet button nexto to the "exit" one
     def placeButtonsSubLabel(self):
-        i = 0
         for button in self.buttons:
-            button.grid(column=i, row=0, padx=15, pady=15)
-            i += 1
+            button.place(relx=.5, rely=0.5, anchor=CENTER)
 
 
     # Command function for the "Next" button
