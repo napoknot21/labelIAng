@@ -1,4 +1,4 @@
-import timer, os, sys, logging
+import os, sys
 from tkinter import *
 
 userin = ""
@@ -16,3 +16,4 @@ def process (event=None) :
     print(content)
 
 e.bind('<Return>', process)
+root.mainloop()
