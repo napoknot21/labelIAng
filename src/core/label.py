@@ -1,17 +1,19 @@
 class Label:
 
     # Constructor
-    def __init__(self, id, name, color):
+    def __init__(self, id, name, color, pos):
         self.id = id
         self.name = name
-        self.color = color  # color in hexadecimal format
+        self.color = color
+        self.pos = pos  # color in hexadecimal format
 
 
     # Setter for the ID
     def setId(self, id):
         if id is not None:
             if self.id != id:
-                self.id = id
+                if isinstance(id, int) :
+                    self.id = id
 
 
     # Setter for the Name
@@ -36,6 +38,13 @@ class Label:
         return True if color[0] == '#' else False
 
 
+
+    def setPos (self, newPos) :
+        if self.pos == newPos :
+            return
+        self.pos = newPos
+
+
     # Return True if the argument color and the self.Color are the same, else False
     def sameColors(self, color):
         return True if color == self.color else False
@@ -53,8 +62,13 @@ class Label:
         return self.color
 
 
+    def getPos (self):
+        return self.pos 
+
+
     def toString (self):
         id = self.getId() if self.id is not None else 0
         name = self.getName() if self.name is not None else "None"
         color = self.getColor() if self.color is not None else "No Color"
-        print("ID => {}, name =>  {}, color => {}".format(str(id), name, color))
+        pos = self.getPos() if self.pos is not None else "No position"
+        print("ID => {}, name =>  {}, color => {}, position => {}".format(str(id), name, color, str(pos)))

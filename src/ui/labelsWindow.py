@@ -1,10 +1,10 @@
+from email import message
 from random import random
 from tkinter import *
 from tkinter.colorchooser import *
 from tkinter import messagebox
-from matplotlib.pyplot import title
+from matplotlib import widgets
 import numpy as np
-from pyparsing import replaceWith
 from src.core import label as lb
 
 class LabelsWindow:
@@ -19,6 +19,8 @@ class LabelsWindow:
 
         self.labelsArray = []
         self.graphicsArray = []
+
+        self.initLabelsArray()
 
         self.loadAndPlaceMainLabels()
         self.loadAndPlaceFooterButtons()
@@ -159,10 +161,15 @@ class LabelsWindow:
         label_header.grid(column=0, row=0)
 
 
-    # Load and generate a graphic label bloc 
-    def __loadGraphicLabelBlock (self, defaultId, defaultColor) :
-        label = lb.Label(id=defaultId, name=None, color=defaultColor)
+    # Initialise the labels array with at least a single label
+    def initLabelsArray (self):
+        label = lb.Label(0, None, self.generateRandomColors(), 0)
         self.labelsArray.append(label)
+
+
+    # Load and generate a graphic label bloc 
+    def __loadGraphicLabelBlock (self, label ,defaultID_Var, defaultName_var) :
+        #self.labelsArray.append(label)
         label_block = Label (
             self.labels_frame,
             width=675,
@@ -170,60 +177,154 @@ class LabelsWindow:
             bg="white",
             fg="blue"
         )
-
+        # Specific label for the id block
         id_label = Label (
             label_block,
         )
         id_label.place(relwidth=.02, relheight=1, relx=0, rely=0)
-        id_var = id
-        id_entry = self.__loadEntryText(id_label, var=id_var)
+        # Entry for the id label => get Id value (integer)
+        id_entry = self.__loadEntryText(id_label, var=defaultID_Var)
         id_entry.place(relx=.5, rely=.5, anchor=CENTER)
-        #id_entry.insert(END, label.getId())
-        #lambda e : label.setId(id_entry.get())
-
+        id_entry.bind('<Return>', lambda e : self.submitIdValue(widget=id_entry, label=label))
+        # Specific label for the name block
         name_label = Label(
             label_block,
         )
         name_label.place(relwidth=.09, relheight=1, relx=.02, rely=0)
-
-        name_var = "Enter the label name"
-        name_entry = self.__loadEntryText(name_label, var=name_var, width=35)
+        # Entry for the name label => get name value (string)
+        name_entry = self.__loadEntryText(name_label, var=defaultName_var, width=35)
         name_entry.place(relx=.5, rely=.5, anchor=CENTER)
-        #name_entry.insert(END, 'Enter the label name' )
-        #lambda e : label.setName(name_entry.get())
-
+        name_entry.bind('<Return>', lambda e : self.submitNameValue(widget=name_entry, label=label))
+        # Specific label for the color block
         color_label = Label(
             label_block
         )
         color_label.place(relwidth=.02, relheight=1, relx=.11, rely=0)
-        
+        # Canvas for the color label => get color value (string)
         color_canvas = Canvas (
             color_label,
             bg=str(label.getColor())
         )
         color_canvas.place(relx=.5, rely=.2, relwidth=.5, relheight=.6, anchor=CENTER)
-
+        # Button for changing color of the color canvas
         color_button = self.__loadButtonSelectorColor(color_label, color_canvas, label)
         color_button.place(relx=.5, rely=.7, anchor=CENTER)
-
+        # Specific label for the delete button
         icon_delete_label = Label(
             label_block,
         )
         icon_delete_label.place(relwidth=.02, relheight=1, rely=0, relx=.13)
-
+        # Button for deleting the current label_block 
         button_delete = Button(icon_delete_label, text="Delete label", command= lambda e : label_block.destroy())
+        button_delete["state"] = self.disableButtonLabels()
         button_delete.place(relx=.5, rely=.5, anchor=CENTER)
         
         return label_block
 
 
+    # Grid all labels from the current label array
     def LoadAndPlaceGraphicalLabels (self) :
-        for i in range (10) :
-            label = self.__loadGraphicLabelBlock(i,self.generateRandomColors())
-            label.grid(column=0, row=i+1)  
+        for i in range (len(self.labelsArray)) :
+            id_var1  = ''
+            name_var1 = ''
+            labelInit = self.__loadGraphicLabelBlock(self.labelsArray[i], id_var1, name_var1)
+            labelInit.grid(column=0, row=i+1)
+        
+
+    # submit values for the id label
+    def submitIdValue (self, widget, label) :
+        content = widget.get()
+        if not self.__checkIdValue(content) :
+            messagebox.showerror("Type id value", "Value must be an integer")
+        else :
+            content = int (widget.get())
+            print(content)
+            label.setId(content)
 
 
-    # Load and generate a entry fot any label (parentWindow )
+    # Check if the name value is valid strning format
+    def submitNameValue (self, widget, label) :
+        content = widget.get()
+        if not isinstance(widget.get(), str) :
+            messagebox.showerror("Type name value", "Value must be a string")
+        else :
+            content = str(widget.get())
+            print(content)
+            label.setName(content)
+
+
+    # Auxiliar fonction that verifies if the id value is a integer (string format)
+    def __checkIdValue (self, value) :
+        if value is not None :
+            if len(value) > 0 :
+                for i in range(len(value)):
+                    if ord(value[i]) < 48 or ord(value[i]) > 57 :
+                        return False
+                return True
+        return False
+
+
+    #Check if the label is at least 1, and the disable or enable the deleting button
+    def disableButtonLabels (self) :
+        if len(self.labelsArray) <= 1 :
+            return DISABLED
+        return NORMAL
+
+
+    #################### self.labelsArray fonctions ############################
+
+    def __addLabel (self, label):
+        self.labelsArray.append(label)
+
+
+    def __deleteLabel (self, pos):
+        if len(self.labelsArray) == 0: return
+        if len(self.labelsArray) <= pos : return
+        self.labelsArray[pos] = None
+    
+
+    def __cleanArray (self) :
+        cmpt = 0
+        for i in range (len(self.labelsArray)) :
+            if self.labelsArray[i] == None :
+                cmpt += 1
+        if cmpt == 0 : return self.labelsArray
+        newTab = []
+        for i in range (len(self.labelsArray)) :
+            if self.labelsArray[i] != None :
+                newTab.append(self.labelsArray[i])
+        self.labelsArray = newTab
+        return self.labelsArray
+
+
+    def __compareTwoLabels (self, label1, label2):
+        if label1.getId() != label2.getId() :
+            return False
+        if label1.getName() != label2.getName() :
+            return False
+        if label1.getColor() != label2.getColor() :
+            return False
+        if label1.getPos() != label2.getPos() :
+            return False
+        return True
+
+
+    def __getLabelPosition (self, label) :
+        for i in range (len(self.labelsArray)):
+            if self.__compareTwoLabels(len(self.labelsArray[i]), label) :
+                return i
+        return False
+ 
+
+    def __checkAndChangePosition(self) :
+        for i in range (len(self.labelsArray)) :
+            if self.labelsArray[i].getPos() != i :
+                self.labelsArray[i].setPos(i)
+
+    ########################################################################
+
+
+    # Load and generate a entry for any label (parentWindow )
     def __loadEntryText (self, parentWindow, var, width=3) :
         text = Entry (
             parentWindow,
