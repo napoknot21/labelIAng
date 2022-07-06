@@ -51,17 +51,17 @@ class LabelsWindow:
 
     # Header initialization
     def initHeaderLabel(self):
-        self.header = Label(self.window, text="Enter all labels needed", width=100, height=5, fg="blue")
+        self.header = Label(self.window, text="Enter all labels needed", fg="blue")
 
 
     # Body initialization
     def initBodyLabel(self):
-        self.body = Label(self.window, width=100, height=24, bg="white", fg="blue")
+        self.body = Label(self.window, bg="white", fg="blue")
 
 
     # Footer initialization
     def initFooterLabel(self):
-        self.footer = Label(self.window, width=100, height=4, fg="blue")
+        self.footer = Label(self.window, fg="blue")
 
 
     # Function initialization for all main label initialization functions
@@ -125,33 +125,29 @@ class LabelsWindow:
         id_label = Label (
             label_header,
             text="id",
-            height=2,
             fg="blue",
             bg="white"
         )
-        id_label.place(relwidth=.02, relx=0, rely=0)
+        id_label.place(relwidth=.02, relheight=1, relx=0, rely=0)
         name_label = Label(
             label_header,
             text="Name",
-            height=2,
             fg="blue",
             bg="white"
         )
-        name_label.place(relwidth=.09, relx=.02, rely=0)
+        name_label.place(relwidth=.09, relheight=1, relx=.02, rely=0)
         color_label = Label(
             label_header,
             text="Color",
-            height=2,
             fg="blue",
             bg="white"
         )
-        color_label.place(relwidth=.02, relx=.11, rely=0)
+        color_label.place(relwidth=.02, relheight=1, relx=.11, rely=0)
         icon_delete_label = Label(
             label_header,
-            height=2,
             bg="white"
         )
-        icon_delete_label.place(relwidth=.02, rely=0, relx=.13)
+        icon_delete_label.place(relwidth=.02, relheight=1, rely=0, relx=.13)
         return label_header
 
 
@@ -372,22 +368,31 @@ class LabelsWindow:
         return False
 
 
+    def loadSubLabelFooter(self) :
+        self.label_exit = Label(self.footer)
+        self.label_exit.place(relheight=1, relwidth=.5, relx=0, rely=0)
+
+        self.label_accept = Label(self.footer)
+        self.label_accept.place(relheight=1, relwidth=.5, relx=.5, rely=0)
+
+
     def __loadButtons(self):
         self.buttons = []
-        button_exit = Button(self.footer, text="Exit", command=exit, width=45, relief='groove', bg="white")
+        button_exit = Button(self.label_exit, text="Exit", command=exit, width=45, relief='groove', bg="white")
         self.buttons.append(button_exit)
-        button_accept = Button(self.footer, text="Next", width=45, command=lambda : self.showAllLabels() , relief='groove', bg="white")
+        button_accept = Button(self.label_accept, text="Next", width=45, command=lambda : self.showAllLabels() , relief='groove', bg="white")
         self.buttons.append(button_accept)
 
 
     # Place the exit & accept buttons in the fotter label
     def __placeFooterButtons(self):
-        for i, button in enumerate(self.buttons) :
-            button.grid(column=i, row=0, padx=15, pady=15)
+        for button in self.buttons :
+            button.place(relx=.5, rely=.5, anchor=CENTER)
 
 
     # ensemble function for buttons
     def loadAndPlaceFooterButtons(self):
+        self.loadSubLabelFooter()
         self.__loadButtons()
         self.__placeFooterButtons()
 
