@@ -3,6 +3,7 @@ from random import random
 from tkinter import *
 from tkinter.colorchooser import *
 from tkinter import messagebox
+from unicodedata import name
 from matplotlib import widgets
 import numpy as np
 from src.core import label as lb
@@ -125,33 +126,29 @@ class LabelsWindow:
         id_label = Label (
             label_header,
             text="id",
-            height=2,
             fg="blue",
             bg="white"
         )
-        id_label.place(relwidth=.02, relx=0, rely=0)
+        id_label.place(relwidth=.02, relheight=1, relx=0, rely=0)
         name_label = Label(
             label_header,
             text="Name",
-            height=2,
             fg="blue",
             bg="white"
         )
-        name_label.place(relwidth=.09, relx=.02, rely=0)
+        name_label.place(relwidth=.09, relheight=1, relx=.02, rely=0)
         color_label = Label(
             label_header,
             text="Color",
-            height=2,
             fg="blue",
             bg="white"
         )
-        color_label.place(relwidth=.02, relx=.11, rely=0)
+        color_label.place(relwidth=.02, relheight=1, relx=.11, rely=0)
         icon_delete_label = Label(
             label_header,
-            height=2,
             bg="white"
         )
-        icon_delete_label.place(relwidth=.02, rely=0, relx=.13)
+        icon_delete_label.place(relwidth=.02, relheight=1, rely=0, relx=.13)
         return label_header
 
 
@@ -163,7 +160,7 @@ class LabelsWindow:
 
     # Initialise the labels array with at least a single label
     def initLabelsArray (self):
-        label = lb.Label(0, None, self.generateRandomColors(), 0)
+        label = lb.Label(None, None, self.generateRandomColors(), 0)
         self.labelsArray.append(label)
 
 
@@ -186,6 +183,7 @@ class LabelsWindow:
         id_entry = self.__loadEntryText(id_label, var=defaultID_Var)
         id_entry.place(relx=.5, rely=.5, anchor=CENTER)
         id_entry.bind('<Return>', lambda e : self.submitIdValue(widget=id_entry, label=label))
+        id_entry.insert(0, str(label.getId()) if label.getId() is not None else "")
         # Specific label for the name block
         name_label = Label(
             label_block,
@@ -195,6 +193,7 @@ class LabelsWindow:
         name_entry = self.__loadEntryText(name_label, var=defaultName_var, width=35)
         name_entry.place(relx=.5, rely=.5, anchor=CENTER)
         name_entry.bind('<Return>', lambda e : self.submitNameValue(widget=name_entry, label=label))
+        name_entry.insert(0, label.getName() if label.getName() is not None else "")
         # Specific label for the color block
         color_label = Label(
             label_block
@@ -215,26 +214,37 @@ class LabelsWindow:
         )
         icon_delete_label.place(relwidth=.02, relheight=1, rely=0, relx=.13)
         # Button for deleting the current label_block 
-        button_delete = Button(icon_delete_label, text="Delete label", command= lambda e : label_block.destroy())
+        button_delete = Button(icon_delete_label, text="Delete label", command=label_block.destroy)
         button_delete["state"] = self.disableButtonLabels()
         button_delete.place(relx=.5, rely=.5, anchor=CENTER)
         
         return label_block
 
 
+    def testGraphicalsLabels (self) :
+        for i in range (5) :
+            label = lb.Label(None, None, self.generateRandomColors(), i+1)
+            self.labelsArray.append(label)
+
+
     # Grid all labels from the current label array
     def LoadAndPlaceGraphicalLabels (self) :
+        #self.testGraphicalsLabels()
         for i in range (len(self.labelsArray)) :
             id_var1  = ''
             name_var1 = ''
             labelInit = self.__loadGraphicLabelBlock(self.labelsArray[i], id_var1, name_var1)
+            self.graphicsArray.append(labelInit)
             labelInit.grid(column=0, row=i+1)
+        label_button = self.loadLabelAddButton()
+        self.graphicsArray.append(label_button)
+        label_button.grid(column=0, row=(len(self.labelsArray)+1))
         
 
     # submit values for the id label
     def submitIdValue (self, widget, label) :
         content = widget.get()
-        if not self.__checkIdValue(content) :
+        if not content.isnumeric() :
             messagebox.showerror("Type id value", "Value must be an integer")
         else :
             content = int (widget.get())
@@ -253,22 +263,36 @@ class LabelsWindow:
             label.setName(content)
 
 
-    # Auxiliar fonction that verifies if the id value is a integer (string format)
-    def __checkIdValue (self, value) :
-        if value is not None :
-            if len(value) > 0 :
-                for i in range(len(value)):
-                    if ord(value[i]) < 48 or ord(value[i]) > 57 :
-                        return False
-                return True
-        return False
-
-
     #Check if the label is at least 1, and the disable or enable the deleting button
     def disableButtonLabels (self) :
         if len(self.labelsArray) <= 1 :
             return DISABLED
         return NORMAL
+
+
+    def loadLabelAddButton (self) :
+        label_addButton = Label (
+            self.labels_frame,
+            width=675,
+            height=4,
+            bg="white",
+        )
+        add_button = Button (
+            label_addButton,
+            text="Add a new Label",
+            command=self.addGraphicalLabel
+        )
+        add_button.place(relx=.065, rely=.5)
+        return label_addButton
+
+
+    def addGraphicalLabel (self) :
+        len_labels = len(self.labelsArray)
+        label = lb.Label(len_labels, None, self.generateRandomColors(), len_labels)
+        self.labelsArray.append(label)
+        for label in self.labelsArray :
+            print(label.toString())
+        self.LoadAndPlaceGraphicalLabels()
 
 
     #################### self.labelsArray fonctions ############################
@@ -365,10 +389,10 @@ class LabelsWindow:
 
     # Return True if the random color is in the colorsArrays and False else
     def __searchElement (self, random_color) :
-        if not self.colorsArray: #if self.colorsArrays has no element
+        if not self.labelsArray : #if self.colorsArrays has no element
             return False
-        for color in self.colorsArray :
-            if color == random_color : return True
+        for label in self.labelsArray :
+            if label.getColor() == random_color : return True
         return False
 
 
@@ -405,4 +429,4 @@ class LabelsWindow:
 
 
     def getLabels (self) :
-        return None
+        return self.labelsArray
