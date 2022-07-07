@@ -1,12 +1,14 @@
 from src.core import model as md
+from src.ui import mainWindow as mw
 from src.ui import labelsWindow as lw
 
 class Launcher :
 
 	#Constructor
 	def __init__(self) :
-		self.M = md.Model()
+		#self.M = md.Model()
 		#self.LW = lw.LabelsWindow()
+		self.MW = mw.MainWindow(None, None, None)
 		
 
 #Main function 

@@ -1,3 +1,6 @@
+from src.core import video as vd
+from src.core import label as ls
+
 from tkinter import *
 import matplotlib.pyplot as plt
 import numpy as np
@@ -15,9 +18,11 @@ class MainWindow:
         self.window = Tk()
         self.initWindow()
         self.loadAndPlaceMainLabels()
-        self.loadSubLabelsHeader()
+
         self.loadAndPlaceSubLabelsHeader()
-        self.loadAndPlaceSignalsLabels(3)
+        self.__loadAndPlaceLabelFramesAndTime()
+
+        self.loadAndPlaceSubLabelsBody()
         self.window.mainloop()
 
 
@@ -26,17 +31,17 @@ class MainWindow:
         self.window.state('zoomed')
         self.window.config(background="white")
         self.window.geometry("960x540")
-        self.loadIconWindow("src/ui/.images/icon.png")
+        self.__loadIconWindow("src/ui/.images/icon.png")
 
 
     # Import an images and put it as icon window
-    def loadIconWindow(self, filePath):
+    def __loadIconWindow(self, filePath):
         p1 = PhotoImage(file=filePath)
         self.window.iconphoto(False, p1)
 
 
     # Load header label
-    def loadHeader(self):
+    def __loadHeader(self):
         self.header = Label(
             self.window,
             bg="black"
@@ -45,7 +50,7 @@ class MainWindow:
 
 
     # Load body label
-    def loadBody(self):
+    def __loadBody(self):
         self.body = Label(
             self.window,
             bg="blue"
@@ -55,11 +60,11 @@ class MainWindow:
 
     # Load and place the main labels (header and body labels)
     def loadAndPlaceMainLabels(self):
-        self.loadHeader()
-        self.loadBody()
+        self.__loadHeader()
+        self.__loadBody()
 
 
-    def loadSubLabelsHeader(self):
+    def __loadSubLabelsHeader(self):
         self.video_label = Label(
             self.header,
             bg="yellow"
@@ -73,11 +78,12 @@ class MainWindow:
 
 
     def loadAndPlaceSubLabelsHeader(self):
-        self.loadAndPlaceVideoCanvas()
-        self.loadAndPlaceLabelsCanvas()
+        self.__loadSubLabelsHeader()
+        self.__loadAndPlaceVideoCanvas()
+        self.__loadAndPlaceLabelsCanvas()
 
 
-    def loadAndPlaceVideoCanvas(self):
+    def __loadAndPlaceVideoCanvas(self):
         self.video_canvas = Canvas(
             self.video_label,
             bg="white"
@@ -85,7 +91,7 @@ class MainWindow:
         self.video_canvas.place(relx=0.05, rely=0.05, relwidth=0.905, relheight=0.9)
 
 
-    def loadAndPlaceLabelsCanvas(self):
+    def __loadAndPlaceLabelsCanvas(self):
         self.video_info = Label(
             self.labels_label,
             bg="brown"
@@ -103,16 +109,98 @@ class MainWindow:
         self.buttons_canvas.place(relx=.05, rely=.8, relwidth=.905, relheight=.15)
 
 
-    def loadAndPlaceSignalsLabels (self, signalsLength):
-        self.signals = []
-        space = 0.01
-        rely = 0
-        height = (1 - ((signalsLength + 1) * space)) / signalsLength
-        for i in range(signalsLength):
-            signal_label = Label (
-                self.body,
-                bg="pink"
-            )
-            signal_label.place(relx=0.003, rely=space+ rely, relwidth=.985, relheigh=height)
-            space += space
-            rely += height
+    def loadAndPlaceSubLabelsBody (self) :
+        self.__loadSignalsLabel()
+        self.__loadSignalsScrollBar()
+        self.__loadLabelsLabel()
+        self.__loadScrollBarLabels()
+
+
+    def __loadSignalsLabel (self) :
+        self.signals_label = Label(
+            self.body,
+            bg="pink"
+        )
+        self.signals_label.place(relx=0, rely=0, relwidth=.98, relheight=1)
+        self.sub_canvas = Canvas(
+            self.signals_label,
+            bg="light blue",
+            highlightbackground="white"
+        )
+        self.sub_canvas.place(relx=0, rely=0, relwidth=1, relheight=1)
+        self.scrollbar_label = Label(
+            self.body,
+        )
+        self.scrollbar_label.place(relx=.98, rely=0, relwidth=.02, relheight=1)
+
+
+    def __loadSignalsScrollBar (self):
+        
+        self.scrollbar_signals = Scrollbar (
+            self.scrollbar_label,
+            orient=VERTICAL,
+            command=self.sub_canvas.yview
+        )
+        self.sub_canvas.update()
+        print(self.sub_canvas.winfo_width())
+        self.scrollbar_signals.place(relx=0, rely=0, relwidth=1, relheight=1)
+        self.__configSubBodyWidget()
+        self.second_frame = Frame(
+            self.sub_canvas, bg="white", 
+            height=350,
+            highlightbackground="white",
+            width=self.sub_canvas.winfo_width()
+        )
+        self.second_frame.place(relx=0, rely=0, relwidth=1)
+        self.sub_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
+
+
+    #Config for the scrollbar
+    def __configSubBodyWidget(self):
+        self.sub_canvas.configure(yscrollcommand=self.scrollbar_signals.set)
+        self.sub_canvas.bind('<Configure>', lambda e: self.sub_canvas.configure(scrollregion=self.sub_canvas.bbox("all")))
+
+
+    def __loadLabelsLabel (self) :
+        self.labels_label = Label(
+            self.labels_canvas,
+            bg="light blue"
+            
+        )
+        self.labels_label.place(relx=0, rely=0, relwidth=.95, relheight=1)
+        self.subLabels_canvas = Canvas (
+            self.labels_label,
+            bg="light blue",
+            highlightbackground="white"
+        )
+        self.subLabels_canvas.place(relx=0, rely=0, relwidth=1, relheight=1)
+        self.scrollbarLabels_label = Label (
+            self.labels_canvas,
+            bg="light blue"
+        )
+        self.scrollbarLabels_label.place(relx=.95, rely=0, relwidth=.05, relheight=1)
+
+
+    def __loadScrollBarLabels (self) :
+        self.scrollbar_label = Scrollbar(
+            self.scrollbarLabels_label,
+            orient="vertical",
+            command=self.subLabels_canvas.yview
+        )
+        self.scrollbar_label.place(relx=0, rely=0, relwidth=1, relheight=1)
+
+
+    def __loadAndPlaceLabelFramesAndTime (self) :
+        self.frame = Label (
+            self.video_info,
+            bg="blue"
+        )
+        self.frame.place(relx=0, rely=0, relwidth=.5, relheight=1)
+        self.timer = Label (
+            self.video_info,
+            bg="black"
+        )
+        self.timer.place(relx=0.5, rely=0, relwidth=.5, relheight=1)
+
+    
+
