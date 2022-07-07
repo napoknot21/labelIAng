@@ -13,8 +13,13 @@ class Model :
         if self.filename_video is None or self.filename_csv is None :
             print("The video file or the csv file is None")
             exit(1)
-        self.T = cn.Connexion(self.filename_video, self.filename_csv)
-
-        self.S = sw.SignalsWindow(self.T.getterFilenames()[1]).getSignalsSelected()
-        self.LW = lw.LabelsWindow()
-        self.MW = mw.MainWindow(self.S, self.T.getterFilenames()[0], None)#self.LW.getLabels())
+        data_connexion = cn.Connexion(self.filename_video, self.filename_csv).getterFilenames()
+        if data_connexion[0] is None or data_connexion[1] is None :
+            print("Not possible to connect to the video and/or the csv file")
+            exit(1)
+        self.S = sw.SignalsWindow(data_connexion[1]).getSignalsSelected()
+        data_labels = lw.LabelsWindow().getLabels()
+        if data_labels is not None :
+            print("Impossible to get labels")
+            exit(1)
+        self.MW = mw.MainWindow(self.S, data_connexion[0], data_labels)#self.LW.getLabels())

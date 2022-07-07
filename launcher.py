@@ -5,8 +5,8 @@ class Launcher :
 
 	#Constructor
 	def __init__(self) :
-		#self.M = md.Model()
-		self.LW = lw.LabelsWindow()
+		self.M = md.Model()
+		#self.LW = lw.LabelsWindow()
 		
 
 #Main function 
