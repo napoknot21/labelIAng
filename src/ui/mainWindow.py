@@ -21,6 +21,7 @@ class MainWindow:
         #self.video = vd.Video(filename_video)
         self.graphic_video = vdUI.VideoUI(None, filename_video)
         self.labels_entered = labels_entered
+        self.graphic_labels = []
         self.window = Tk()
         self.initWindow()
         self.loadAndPlaceMainLabels()
@@ -208,19 +209,24 @@ class MainWindow:
         self.timer.place(relx=0.5, rely=0, relwidth=.5, relheight=1)
 
 
-    def __loadBlockLabelForLabel (self, label) :
-        label_grap = Label (
-            self.labels_l
-        )
-
-
-"""
-
-    def __loadGraphicalLabel (self) : 
+    # Private function for tranform the label to graphical labels (labelsUI)
+    def __loadGraphicalLabels (self) : 
         for i, label in enumerate (self.labels_entered) :
             labelUI = lbUI.LabelUI(self.scrollbarLabels_label, label)
+            self.graphic_labels.append(labelUI)
+    
+
+    # private funtion for place (grid) all graphical labels
+    def __placeGraphicalLabels (self) :
+        for i, labelUI in enumerate(self.graphic_labels) :
             label_block = labelUI.loadLabelBlock()
             label_block.grid(column=0, row=i)
 
-"""    
+
+    #Load and place all graphical labels in the main window
+    def loadAndPlaceGraphicalLabels (self) :
+        self.__loadGraphicalLabels()
+        self.__placeGraphicalLabels()
+
+    
 
