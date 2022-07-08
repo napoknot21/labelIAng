@@ -12,7 +12,9 @@ class MainWindow:
 
     np.random.seed(19680801)
 
-    def __init__(self, signals_selected=None, filename_video="C:/Users/cmartin-/Desktop/app-pycharm-edition/MobEyeQ3.avi", labels_entered=None):
+    """C:/Users/cmartin-/Desktop/app-pycharm-edition/MobEyeQ3.avi"""
+
+    def __init__(self, signals_selected=None, filename_video=None, labels_entered=None):
         self.signals_selected = signals_selected
         #self.video = vd.Video(filename_video)
         self.graphic_video = vdUI.VideoUI(None, filename_video)

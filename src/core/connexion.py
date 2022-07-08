@@ -35,8 +35,10 @@ class Connexion :
         if os.path.exists(self.filename_video):
             print("Video successfully founded")
             if self.filename_video.endswith(".mp4") or self.filename_video.endswith(".mov") \
-                    or self.filename_video.endswith(".mwv") or self.filename_video.endswith(".flv") \
-                    or self.filename_video.endswith(".avi") or self.filename_video.endswith(".mkv"):
+                    or self.filename_video.endswith(".wmv") or self.filename_video.endswith(".flv") \
+                    or self.filename_video.endswith(".avi") or self.filename_video.endswith(".mkv") \
+                    or self.filename_video.endswith(".mpeg") or self.filename_video.endswith(".asf") \
+                    or self.filename_video.endswith(".qt") or self.filename_video.endswith(".m4v") :
                 print("Video successfully loaded")
                 # self.data_video = vd.Video(self.filename_video)
                 return

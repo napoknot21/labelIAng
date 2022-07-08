@@ -19,7 +19,7 @@ class Model :
             exit(1)
         self.S = sw.SignalsWindow(data_connexion[1]).getSignalsSelected()
         data_labels = lw.LabelsWindow().getLabels()
-        if data_labels is not None :
+        if data_labels is None :
             print("Impossible to get labels")
             exit(1)
         self.MW = mw.MainWindow(self.S, data_connexion[0], data_labels)#self.LW.getLabels())

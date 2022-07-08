@@ -8,11 +8,11 @@ class Launcher :
 
 	#Constructor
 	def __init__(self) :
-		self.libraries = ["pandas", "opencv", "matplotlib", "tk"]
+		self.libraries = ['pandas', 'opencv', 'matplotlib', 'tk', 'pillow']
 		#self.installPackages()
-		#self.M = md.Model()
+		self.M = md.Model()
 		#self.LW = lw.LabelsWindow()
-		self.MW = mw.MainWindow(signals_selected=None, labels_entered=None)
+		#self.MW = mw.MainWindow(signals_selected=None, labels_entered=None)
 
 
 	def installPackages (self) :

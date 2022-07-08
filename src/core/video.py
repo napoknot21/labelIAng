@@ -12,7 +12,7 @@ class Video :
 
 	def initVideoFile (self) :
 		self.video = cv2.VideoCapture(self.filepath)
-		if self.video.isOpened()== False :
+		if not self.video.isOpened() :
 			print("Error opening video stream or file")
 
 
@@ -45,4 +45,4 @@ class Video :
 	def getVideo (self) :
 		return self.video
 
-v = Video("MobEyeQ3.avi")
+#v = Video("MobEyeQ3.avi")
