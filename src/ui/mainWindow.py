@@ -1,7 +1,9 @@
+from pyparsing import col
 from src.core import video as vd
 from src.core import label as ls
 from src.ui.assets import videoUI as vdUI
 from src.ui.assets import signalUI as sgUI
+from src.ui.assets import labelUI as lbUI
 from tkinter import *
 import matplotlib.pyplot as plt
 import numpy as np
@@ -25,7 +27,7 @@ class MainWindow:
 
         self.loadAndPlaceSubLabelsHeader()
         self.__loadAndPlaceLabelFramesAndTime()
-
+        #self.__loadGraphicalLabel()
         self.loadAndPlaceSubLabelsBody()
         self.window.mainloop()
 
@@ -211,5 +213,14 @@ class MainWindow:
             self.labels_l
         )
 
-    
+
+"""
+
+    def __loadGraphicalLabel (self) : 
+        for i, label in enumerate (self.labels_entered) :
+            labelUI = lbUI.LabelUI(self.scrollbarLabels_label, label)
+            label_block = labelUI.loadLabelBlock()
+            label_block.grid(column=0, row=i)
+
+"""    
 
