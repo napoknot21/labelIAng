@@ -1,6 +1,7 @@
 from src.core import video as vd
 from src.core import label as ls
-
+from src.ui.assets import videoUI as vdUI
+from src.ui.assets import signalUI as sgUI
 from tkinter import *
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,9 +12,10 @@ class MainWindow:
 
     np.random.seed(19680801)
 
-    def __init__(self, signals_selected=None, filename_video=None, labels_entered=None):
+    def __init__(self, signals_selected=None, filename_video="C:/Users/cmartin-/Desktop/app-pycharm-edition/MobEyeQ3.avi", labels_entered=None):
         self.signals_selected = signals_selected
-        self.filename_video = filename_video
+        #self.video = vd.Video(filename_video)
+        self.graphic_video = vdUI.VideoUI(None, filename_video)
         self.labels_entered = labels_entered
         self.window = Tk()
         self.initWindow()
@@ -135,7 +137,6 @@ class MainWindow:
 
 
     def __loadSignalsScrollBar (self):
-        
         self.scrollbar_signals = Scrollbar (
             self.scrollbar_label,
             orient=VERTICAL,
@@ -165,7 +166,6 @@ class MainWindow:
         self.labels_label = Label(
             self.labels_canvas,
             bg="light blue"
-            
         )
         self.labels_label.place(relx=0, rely=0, relwidth=.95, relheight=1)
         self.subLabels_canvas = Canvas (
@@ -193,6 +193,7 @@ class MainWindow:
     def __loadAndPlaceLabelFramesAndTime (self) :
         self.frame = Label (
             self.video_info,
+            text="Total Frames: " + str(self.graphic_video.getTotalNumberFrames()),
             bg="blue"
         )
         self.frame.place(relx=0, rely=0, relwidth=.5, relheight=1)
@@ -201,6 +202,12 @@ class MainWindow:
             bg="black"
         )
         self.timer.place(relx=0.5, rely=0, relwidth=.5, relheight=1)
+
+
+    def __loadBlockLabelForLabel (self, label) :
+        label_grap = Label (
+            self.labels_l
+        )
 
     
 

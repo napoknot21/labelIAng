@@ -6,14 +6,17 @@ class Video :
 
 	def __init__(self, filename) :
 		self.filepath = filename
-		self.start()
+		self.initVideoFile()
+		#self.start()
+
+
+	def initVideoFile (self) :
+		self.video = cv2.VideoCapture(self.filepath)
+		if self.video.isOpened()== False :
+			print("Error opening video stream or file")
+
 
 	def start (self) :
-		self.video = cv2.VideoCapture(self.filepath)
-
-		if (self.video.isOpened()== False):
-			print("Error opening video stream or file")
-	
 		while(self.video.isOpened()) :
 
 			# Capture frame-by-frame
@@ -37,5 +40,9 @@ class Video :
 		self.video.release()
 		#out.release() 
 		cv2.destroyAllWindows()
+
+
+	def getVideo (self) :
+		return self.video
 
 v = Video("MobEyeQ3.avi")
