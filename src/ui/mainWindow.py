@@ -33,7 +33,9 @@ class MainWindow:
         #Load and place main labels (header and Body)
         self.loadAndPlaceMainLabels()
 
+        #Load and place sub labels of HEADER
         self.loadAndPlaceSubLabelsHeader()
+        
         self.__loadAndPlaceLabelFramesAndTime()
         #self.__loadGraphicalLabel()
         self.loadAndPlaceSubLabelsBody()
