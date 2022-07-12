@@ -6,14 +6,14 @@ A Desktop app for Valeo Vision.
 
 The project is written in ```python 3```, so if you have another version, upload it [here](https://www.python.org/downloads/)
 
-The project uses differents libraries like ```Tkinter```,  ```pandas```, ```opencv```, ```matplotlib``` so we need install them by :
+The project uses differents libraries like ```Tkinter```,  ```pandas```, ```opencv```, ```matplotlib``` and ```PILL```so we need install them by :
 > with pip3 method
 ```
-pip3 install pandas tk opencv-python matplotlib
+pip3 install pandas tk opencv-python matplotlib pillow
 ```
 > For conda users
 ```
-conda install pandas tk opencv-python matplotlib
+conda install pandas tk opencv-python matplotlib pillow
 ```
 
 ## Run the Project
@@ -42,3 +42,9 @@ When we run the ```launcher.py```, we'll have the *browser window*.
 We have to select a *video* file (the simulation video) and a *CSV* file (the data).
 
 Once selected, then we can start !
+
+Then, we have to select all signals to work with (from th csv file) so make sure that select the goog csv file ! 
+
+We're supposed to have a window like this :
+
+![signals-window](src/ui/.images/signalsWindow.PNG)

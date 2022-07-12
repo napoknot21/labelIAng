@@ -8,10 +8,15 @@ class SignalsWindow:
     def __init__(self, filename_csv=None):
         self.values = []
         self.signals_selected = None
+        #self.readImportFile()
         self.readSource(filename_csv)  # We suppose the file is already verified
         self.window = Tk()
         self.initialiseWindow()
         self.window.mainloop()
+
+
+    def readImportFile (self) :
+        self.data = pd.read_csv("../.data/import/savesSignals.csv")
 
 
     # Read the file csv source

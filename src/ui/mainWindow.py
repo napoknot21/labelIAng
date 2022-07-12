@@ -1,12 +1,13 @@
-from pyparsing import col
 from src.core import video as vd
 from src.core import label as ls
 from src.ui.assets import videoUI as vdUI
 from src.ui.assets import signalUI as sgUI
 from src.ui.assets import labelUI as lbUI
 from tkinter import *
-import matplotlib.pyplot as plt
+from PIL import ImageTk, Image
+
 import numpy as np
+import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 import matplotlib.gridspec as gridspec
 
@@ -20,9 +21,8 @@ class MainWindow:
         self.signals_selected = signals_selected
         self.filename_video = filename_video
         self.labels_entered = labels_entered
-
-        #self.video = vd.Video(filename_video)
-        self.graphic_video = vdUI.VideoUI(None, self.filename_video)
+        self.graphic_video = None
+        
         self.graphic_signals = []
         self.graphic_labels = []
 
@@ -36,9 +36,12 @@ class MainWindow:
         #Load and place sub labels of HEADER
         self.loadAndPlaceSubLabelsHeader()
         
+        self.graphic_video = vdUI.VideoUI(self.video_canvas, self.filename_video)
         self.__loadAndPlaceLabelFramesAndTime()
         #self.__loadGraphicalLabel()
         self.loadAndPlaceSubLabelsBody()
+        #self.video = vd.Video(filename_video)
+        
         self.window.mainloop()
 
 
@@ -76,14 +79,14 @@ class MainWindow:
 
 
     def __loadAndPlaceSubLabelsHeader(self):
-        self.video_label = Label(self.header, bg="yellow")
+        self.video_label = Label(self.header, bg="light blue")
         self.video_label.place(relx=0, rely=0, relheight=1, relwidth=.65)
         self.labels_label = Label(self.header, bg="green")
         self.labels_label.place(relx=.65, rely=0, relheight=1, relwidth=.35)
 
 
     def __loadAndPlaceVideoCanvas(self):
-        self.video_canvas = Canvas(self.video_label,bg="white")
+        self.video_canvas = Label (self.video_label,bg="light blue")
         self.video_canvas.place(relx=0.05, rely=0.05, relwidth=0.905, relheight=0.9)
 
 
@@ -118,7 +121,6 @@ class MainWindow:
             command=self.sub_canvas.yview
         )
         self.sub_canvas.update()
-        print(self.sub_canvas.winfo_width())
         self.scrollbar_signals.place(relx=0, rely=0, relwidth=1, relheight=1)
         self.__configSubBodyWidget()
         self.second_frame = Frame(
