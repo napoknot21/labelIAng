@@ -4,14 +4,13 @@ A Desktop app for Valeo Vision.
 
 ## Pre-requisites
 
-The project is written in ```python 3```, so if you have another version, upload it [here](https://www.python.org/downloads/)
+The project is written in ```python3```, so if you have another version, upload it [here](https://www.python.org/downloads/)
 
-The project uses differents libraries like ```Tkinter```,  ```pandas```, ```opencv```, ```matplotlib``` and ```PILL```so we need install them by :
-> with pip3 method
-```
-pip3 install pandas tk opencv-python matplotlib pillow
-```
-> For conda users
+The project uses differents open source libraries like ```tkinter```,  ```pandas```, ```opencv```, ```matplotlib``` and ```PILL```.
+
+if you use ```pip``` method, you don't have to worry about installing dependencies yourself, The ```launcher.py``` does it automatically !
+
+For ```conda``` users, you can install them manually by :
 ```
 conda install pandas tk opencv-python matplotlib pillow
 ```
