@@ -1,11 +1,10 @@
-from src.core import video as vd
-from src.core import label as ls
+from time import time
+from src.core import label as lb
 from src.ui.assets import videoUI as vdUI
 from src.ui.assets import signalUI as sgUI
 from src.ui.assets import labelUI as lbUI
 from tkinter import *
-from PIL import ImageTk, Image
-
+import time as tm
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
@@ -21,8 +20,8 @@ class MainWindow:
         self.signals_selected = signals_selected
         self.filename_video = filename_video
         self.labels_entered = labels_entered
+
         self.graphic_video = None
-        
         self.graphic_signals = []
         self.graphic_labels = []
 
@@ -35,12 +34,14 @@ class MainWindow:
 
         #Load and place sub labels of HEADER
         self.loadAndPlaceSubLabelsHeader()
-        
         self.graphic_video = vdUI.VideoUI(self.video_canvas, self.filename_video)
+
+
         self.__loadAndPlaceLabelFramesAndTime()
         #self.__loadGraphicalLabel()
         self.loadAndPlaceSubLabelsBody()
         #self.video = vd.Video(filename_video)
+        self.loadAndPlaceGraphicalLabels()
         
         self.window.mainloop()
 
@@ -191,7 +192,7 @@ class MainWindow:
     # Private function for tranform the label to graphical labels (labelsUI)
     def __loadGraphicalLabels (self) : 
         for i, label in enumerate (self.labels_entered) :
-            labelUI = lbUI.LabelUI(self.scrollbarLabels_label, label)
+            labelUI = lbUI.LabelUI(self.subLabels_canvas, label)
             self.graphic_labels.append(labelUI)
     
 
@@ -206,6 +207,9 @@ class MainWindow:
     def loadAndPlaceGraphicalLabels (self) :
         self.__loadGraphicalLabels()
         self.__placeGraphicalLabels()
+
+
+
 
     
 
