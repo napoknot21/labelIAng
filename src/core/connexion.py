@@ -14,8 +14,10 @@ class Connexion :
 
 
     def checkAndLoadPandasFile(self):
+        print("Searching the CSV file...")
         if os.path.exists(self.filename_csv) :
             print("File CSV successfully founded")
+            print("Loading the CSV file...")
             if self.filename_csv.endswith(".csv"):
                 self.data_csv = pd.read_csv(self.filename_csv)
                 print("File CSV successfully loaded")
@@ -32,8 +34,10 @@ class Connexion :
 
     # check if the Video file source exists and if its format is supported
     def checkAndLoadVideoFile(self):
+        print("Searching the video file...")
         if os.path.exists(self.filename_video):
             print("Video successfully founded")
+            print("Loading the video file...")
             if self.filename_video.endswith(".mp4") or self.filename_video.endswith(".mov") \
                     or self.filename_video.endswith(".wmv") or self.filename_video.endswith(".flv") \
                     or self.filename_video.endswith(".avi") or self.filename_video.endswith(".mkv") \

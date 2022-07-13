@@ -21,6 +21,7 @@ class SignalsWindow:
 
     # Read the file csv source
     def readSource(self, filename_csv):
+        print("Reading source file...")
         if filename_csv.endswith(".csv"):
             self.data = pd.read_csv(filename_csv, index_col=0)
         elif filename_csv.endswith(".xlsx") or filename_csv.endswith(".xls"):
