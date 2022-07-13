@@ -26,7 +26,7 @@ class BrowserFileWindow:
         self.window.title("Video app")
         self.window.geometry("707x500")
         self.window.config(background="white")
-        self.loadIconWindow("src/ui/.images/icon.png")
+        self.loadIconWindow("extras/images/icon.png")
         self.window.resizable(False, False)
 
 

@@ -33,7 +33,7 @@ class SignalsWindow:
         self.window.title("Signals")
         self.window.geometry("707x503")
         self.window.config(background="white")
-        self.loadIconWindow("src/ui/.images/icon.png")
+        self.loadIconWindow("extras/images/icon.png")
         self.window.resizable(False, False)
 
         self.loadProperties()

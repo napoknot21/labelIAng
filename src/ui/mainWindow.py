@@ -51,7 +51,7 @@ class MainWindow:
         self.window.state('zoomed')
         self.window.config(background="white")
         self.window.geometry("960x540")
-        self.__loadIconWindow("src/ui/.images/icon.png")
+        self.__loadIconWindow("extras/images/icon.png")
 
 
     # Import an images and put it as icon window

@@ -37,7 +37,7 @@ This desktop app was created in order to automate the labeling of the simulation
 ### First steps 
 When we run the ```launcher.py```, we'll have the *browser window*.
 
-![browser-window](src/ui/.images/video-welcome.PNG)
+![browser-window](extras/images/video-welcome.PNG)
 
 We have to select a *video* file (the simulation video) and a *CSV* file (the data).
 
@@ -47,4 +47,4 @@ Then, we have to select all signals to work with (from th csv file) so make sure
 
 We're supposed to have a window like this :
 
-![signals-window](src/ui/.images/signalsWindow.PNG)
+![signals-window](extras/images/signalsWindow.PNG)
