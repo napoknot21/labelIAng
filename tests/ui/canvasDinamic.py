@@ -1,95 +1,46 @@
-from calendar import c
 from tkinter import *
-from tkinter import scrolledtext
-from tkinter import ttk
-from turtle import ontimer
-
-from pip import main
+#from tkinter import scrolledtext
+#from tkinter import ttk
 
 root = Tk()
 root.geometry("700x600")
-root.title("Test for the dinamic geometru scrollbar")
-
-
-"""mainLabel = Label(
-    root,
-    bg="light blue"
-)
-mainLabel.place(relx=0, rely=0, relheight=1, relwidth=.97)
-mainCanvas = Canvas (
-    mainLabel,
-    highlightbackground="white"   
-)
-
-
-sb = Scrollbar (
-    scrollarLabel,
-    orient="vertical",
-    command=mainCanvas.yview
-)
-sb.place(relx=0, rely=0, relheight=1, relwidth=1)
-
-mainCanvas.configure(yscrollcommand=sb.set)
-mainCanvas.bind('<Configure>', lambda e: mainCanvas.configure(scrollregion=mainCanvas.bbox("all")))
-
-
-mainFrame = Frame (
-    mainCanvas,
-    highlightbackground="white"
-)
-
-mainCanvas.create_window((0,0), window=mainFrame, anchor="nw")
-
-
-
-def create_block (text=0) :
-    blockLabel = Label (
-        mainCanvas,
-        text=str(text),
-        height=5,
-        width=300,
-        bg="blue"
-    )
-    blockLabel.place()
-    return blockLabel
-
-label = create_block()
-label.grid(column=0, row=0)#place(relx=0, rely=0, relwidth=1)
-"""
-"""
-for i in range(10) :
-    rely = 0
-    label = create_block(i)
-    label.place(relx=0, rely=rely, relwidth=1)
-    rely += 5
-"""
+root.title("Test for the dinamic geometry scrollbar")
 
 tree_frame = Frame (root, bg="red")
 tree_frame.place(relx=0, rely=0, relwidth=1, relheight=1)
 
+my_tree_canvas = Canvas (tree_frame, bg="white")
+my_tree_canvas.pack(side=LEFT, fill=BOTH, expand=1)
 
-tree_scroll = Scrollbar(tree_frame)
+tree_scroll = Scrollbar(tree_frame, orient=VERTICAL, command=my_tree_canvas.yview)
 tree_scroll.pack(side=RIGHT, fill=Y)
 
-my_tree_label = Canvas (tree_frame, yscrollcommand=tree_scroll.set)
-my_tree_label.pack(side='top', fill=BOTH, expand=False)
+my_tree_canvas.configure(yscrollcommand=tree_scroll.set)
 
-#config scrollbar
-tree_scroll.config(command=my_tree_label.yview)
+my_tree_canvas.bind('<Configure>', lambda e : __fill_canvas(e))#my_tree_canvas.configure(scrollregion=my_tree_canvas.bbox("all")))
+#, anchor=CENTER)
 
-"""def create_block (text=0) :
+second_frame = Frame (my_tree_canvas, bg="black")#.pack(side='top', fill="both")#.place(relx=0, rely=0, relwidth=1, relheight=1)
+item = my_tree_canvas.create_window((0,0), window=second_frame, anchor="nw")
+
+def create_block (text=0) :
     blockLabel = Label (
-        my_tree_label,
+        second_frame,
         text=str(text),
         height=5,
+        #width=98,
         bg="blue"
     )
-    blockLabel.pack(fill="both", expand=False)
     return blockLabel
+
+def __fill_canvas (event) :
+    canvas_width = event.width
+    my_tree_canvas.itemconfig(item, width=canvas_width)
+    my_tree_canvas.configure(scrollregion=my_tree_canvas.bbox("all"))
+
 
 for i in range(10) :
     label = create_block(i)
-    label.pack()
+    label.pack(side="top", fill="both", expand=1)
 
-"""
 root.mainloop()
