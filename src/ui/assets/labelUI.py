@@ -13,25 +13,24 @@ class LabelUI :
     def loadLabelBlock (self) :
         label_block = Label (
             self.master,
-            height=4, 
-            width=60
+            height=5,
         )
 
         id_label = Label (
             label_block,
             text="ID: " + str(self.label.getId())
         )
-        id_label.place(relwidth=.02, relheight=1, relx=0, rely=0)
+        id_label.place(relwidth=.2, relheight=1, relx=0, rely=0)
         # Specific label for the name block
         name_label = Label(
             label_block,
             text="NAME LABEL: " + str(self.label.getName())
         )
-        name_label.place(relwidth=.09, relheight=1, relx=.02, rely=0)
+        name_label.place(relwidth=.6, relheight=1, relx=.2, rely=0)
         color_label = Label(
             label_block
         )
-        color_label.place(relwidth=.02, relheight=1, relx=.11, rely=0)
+        color_label.place(relwidth=.2, relheight=1, relx=.8, rely=0)
         # Canvas for the color label => get color value (string)
         color_canvas = Canvas (
             color_label,
