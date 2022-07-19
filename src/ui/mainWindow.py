@@ -1,5 +1,3 @@
-from time import time
-from turtle import width
 from src.core import label as lb
 from src.ui.assets import videoUI as vdUI
 from src.ui.assets import signalUI as sgUI
@@ -7,9 +5,6 @@ from src.ui.assets import labelUI as lbUI
 from tkinter import *
 import time as tm
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.mlab as mlab
-import matplotlib.gridspec as gridspec
 
 class MainWindow:
 
@@ -21,29 +16,25 @@ class MainWindow:
         self.signals_selected = signals_selected
         self.filename_video = filename_video
         self.labels_entered = labels_entered
-
+        # Main list and variables for displaying informations
         self.graphic_video = None
         self.graphic_signals = []
         self.graphic_labels = []
-
         #Initialize functions window
         self.window = Tk()
         self.initWindow()
-
         #Load and place main labels (header and Body)
         self.loadAndPlaceMainLabels()
-
         #Load and place sub labels of HEADER
         self.loadAndPlaceSubLabelsHeader()
         self.graphic_video = vdUI.VideoUI(self.video_canvas, self.filename_video)
-
-
+        # Print the number of frames of the video (auxiliary function)
         self.__loadAndPlaceLabelFramesAndTime()
         #self.__loadGraphicalLabel()
         self.loadAndPlaceSubLabelsBody()
         #self.video = vd.Video(filename_video)
         self.loadAndPlaceGraphicalLabels()
-        
+        # Main loop
         self.window.mainloop()
 
 
@@ -69,7 +60,7 @@ class MainWindow:
 
     # Load the body label
     def __loadBody(self):
-        self.body = Label(self.window,bg="blue")
+        self.body = Frame (self.window,bg="blue")
 
 
     # Load and place the main labels (header and body labels)
@@ -107,45 +98,29 @@ class MainWindow:
         self.buttons_canvas.place(relx=.05, rely=.8, relwidth=.905, relheight=.15)
 
 
+    # Function called for load and places all sub widgets
     def loadAndPlaceSubLabelsHeader(self):
         self.__loadAndPlaceSubLabelsHeader()
         self.__loadAndPlaceVideoCanvas()
         self.__loadAndPlaceLabelsCanvas()
 
 
-    def __loadSignalsLabel (self) :
-        self.signals_label = Label(self.body, bg="pink" )
-        self.signals_label.place(relx=0, rely=0, relwidth=.98, relheight=1)
-        self.sub_canvas = Canvas(self.signals_label,bg="light blue", highlightbackground="white")
-        self.sub_canvas.place(relx=0, rely=0, relwidth=1, relheight=1)
-        self.scrollbar_label = Label(self.body)
-        self.scrollbar_label.place(relx=.98, rely=0, relwidth=.02, relheight=1)
+    def __loadAndPlaceSignalsLabel (self) :
+        # Canvas for the signals blocks
+        self.signals_canvas = Canvas (self.body, bg="blue")
+        self.signals_canvas.pack(side=LEFT, fill=BOTH, expand=1)
+        # Scrollbar to the right side
+        self.scrollbar_signal = Scrollbar (self.body, orient=VERTICAL, command=self.signals_canvas.yview)
+        self.scrollbar_signal.pack(side=RIGHT, fill=Y)
+        # config for the signals canvas
+        self.signals_canvas.config(yscrollcommand=self.scrollbar_signal.set)
+        # bind the signal 
+        self.signals_canvas.bind('<Configure>', lambda e : self.__fill_canvas_signals(e))
+        # second frame fot signals
+        self.second_frame_signal = Frame (self.signals_canvas)
+        self.item_signals = self.signals_canvas.create_window((0,0), window=self.second_frame_signal, anchor="nw")
 
-
-    def __loadSignalsScrollBar (self):
-        self.scrollbar_signals = Scrollbar (
-            self.scrollbar_label,
-            orient=VERTICAL,
-            command=self.sub_canvas.yview
-        )
-        self.sub_canvas.update()
-        self.scrollbar_signals.place(relx=0, rely=0, relwidth=1, relheight=1)
-        self.__configSubBodyWidget()
-        self.second_frame = Frame(
-            self.sub_canvas, bg="white", 
-            height=350,
-            highlightbackground="white",
-            width=self.sub_canvas.winfo_width()
-        )
-        self.second_frame.place(relx=0, rely=0, relwidth=1)
-        self.sub_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
-
-
-    #Config for the scrollbar
-    def __configSubBodyWidget(self):
-        self.sub_canvas.configure(yscrollcommand=self.scrollbar_signals.set)
-        self.sub_canvas.bind('<Configure>', lambda e: self.sub_canvas.configure(scrollregion=self.sub_canvas.bbox("all")))
-
+    
 
     def __loadLabelsLabel (self) :
         # Canvas for labels 
@@ -159,14 +134,13 @@ class MainWindow:
         # config the bind
         self.labels_canvas.bind('<Configure>', lambda e : self.__fill_canvas_labels(e))
         #Second frame (for print the labels blocks)
-        self.second_frame = Frame (self.labels_canvas, bg="black")
-        self.item = self.labels_canvas.create_window((0,0), window=self.second_frame, anchor="nw")
+        self.second_frame_label = Frame (self.labels_canvas, bg="black")
+        self.item_labels = self.labels_canvas.create_window((0,0), window=self.second_frame_label, anchor="nw")
 
 
-
+    # Load and Place the Frames for the signals/labels blocks
     def loadAndPlaceSubLabelsBody (self) :
-        self.__loadSignalsLabel()
-        self.__loadSignalsScrollBar()
+        self.__loadAndPlaceSignalsLabel()
         self.__loadLabelsLabel()
 
 
@@ -187,7 +161,7 @@ class MainWindow:
     # Private function for tranform the label to graphical labels (labelsUI)
     def __loadGraphicalLabels (self) : 
         for i, label in enumerate (self.labels_entered) :
-            labelUI = lbUI.LabelUI(self.second_frame, label)
+            labelUI = lbUI.LabelUI(self.second_frame_label, label)
             self.graphic_labels.append(labelUI)
     
 
@@ -206,8 +180,13 @@ class MainWindow:
 
 
 
-    def __fill_canvas_labels (self, event, ) :
+    def __fill_canvas_labels (self, event) :
         canvas_width = event.width
-        self.labels_canvas.itemconfig(self.item, width=canvas_width)
+        self.labels_canvas.itemconfig(self.item_labels, width=canvas_width)
         self.labels_canvas.configure(scrollregion=self.labels_canvas.bbox("all"))
 
+
+    def __fill_canvas_signals (self, event, ) :
+        canvas_width = event.width
+        self.signals_canvas.itemconfig(self.item_signals, width=canvas_width)
+        self.signals_canvas.configure(scrollregion=self.signals_canvas.bbox("all"))
