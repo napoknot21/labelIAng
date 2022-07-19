@@ -10,8 +10,6 @@ class MainWindow:
 
     np.random.seed(19680801)
 
-    """C:/Users/cmartin-/Desktop/app-pycharm-edition/MobEyeQ3.avi"""
-
     def __init__(self, signals_selected=None, filename_video=None, labels_entered=None):
         self.signals_selected = signals_selected
         self.filename_video = filename_video
@@ -119,10 +117,9 @@ class MainWindow:
         # second frame fot signals
         self.second_frame_signal = Frame (self.signals_canvas)
         self.item_signals = self.signals_canvas.create_window((0,0), window=self.second_frame_signal, anchor="nw")
-
     
 
-    def __loadLabelsLabel (self) :
+    def __loadAndPlaceLabelsLabel (self) :
         # Canvas for labels 
         self.labels_canvas = Canvas (self.labels_frame, bg="red")
         self.labels_canvas.pack(side=LEFT, fill=BOTH, expand=1)
@@ -141,26 +138,19 @@ class MainWindow:
     # Load and Place the Frames for the signals/labels blocks
     def loadAndPlaceSubLabelsBody (self) :
         self.__loadAndPlaceSignalsLabel()
-        self.__loadLabelsLabel()
+        self.__loadAndPlaceLabelsLabel()
 
 
     def __loadAndPlaceLabelFramesAndTime (self) :
-        self.frame = Label (
-            self.video_info,
-            text="Total Frames: " + str(self.graphic_video.getTotalNumberFrames()),
-            bg="blue"
-        )
-        self.frame.place(relx=0, rely=0, relwidth=.5, relheight=1)
-        self.timer = Label (
-            self.video_info,
-            bg="black"
-        )
+        self.frames = Label (self.video_info, text="Total Frames: " + str(self.graphic_video.getTotalNumberFrames()),bg="blue")
+        self.frames.place(relx=0, rely=0, relwidth=.5, relheight=1)
+        self.timer = Label (self.video_info, bg="black")
         self.timer.place(relx=0.5, rely=0, relwidth=.5, relheight=1)
 
 
     # Private function for tranform the label to graphical labels (labelsUI)
     def __loadGraphicalLabels (self) : 
-        for i, label in enumerate (self.labels_entered) :
+        for label in self.labels_entered :
             labelUI = lbUI.LabelUI(self.second_frame_label, label)
             self.graphic_labels.append(labelUI)
     
@@ -178,14 +168,14 @@ class MainWindow:
         self.__placeGraphicalLabels()
 
 
-
-
+    # Auxiliary function for dinamic the width of the label block
     def __fill_canvas_labels (self, event) :
         canvas_width = event.width
         self.labels_canvas.itemconfig(self.item_labels, width=canvas_width)
         self.labels_canvas.configure(scrollregion=self.labels_canvas.bbox("all"))
 
 
+    # Auxiliary function for the dinamic width of the signal block
     def __fill_canvas_signals (self, event, ) :
         canvas_width = event.width
         self.signals_canvas.itemconfig(self.item_signals, width=canvas_width)

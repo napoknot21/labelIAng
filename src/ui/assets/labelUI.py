@@ -25,9 +25,10 @@ class LabelUI :
         return label_block
 
     
+    # Getter for the master widget
     def getMaster (self) :
         return self.master
 
-
+    # Getter for the label object
     def getLabel (self) :
         return self.label
