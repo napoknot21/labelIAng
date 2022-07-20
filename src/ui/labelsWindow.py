@@ -1,9 +1,7 @@
-from email import message
 from random import random
 from tkinter import *
 from tkinter.colorchooser import *
 from tkinter import messagebox
-from unicodedata import name
 from matplotlib import widgets
 import numpy as np
 from src.core import label as lb
