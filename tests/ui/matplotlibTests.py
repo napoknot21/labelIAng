@@ -35,20 +35,33 @@ ax1.grid(True)
 
 data = pd.read_csv("tests/VehicleData.csv")
 
-data
+timer_name = data.columns[0]
 
-values0 =  [1.2, 2.2, 3.2, 4.2, 5.2, 5.4, 6.2, 6.4, 6.0, 10.0]
+print(timer_name)
 
-values1 = np.array([1.2, 2.2, 3.2, 4.2, 5.2, 5.4, 6.2, 6.4, 6.0, 10.0])
-values2  = np.array([5.3, 6.3, 7.3, 8.3, 9.0, 1.0, 4.8, 5.6, 2.1, 7.6])
+timer = np.array(data[timer_name])
+
+print(timer)
+
+print(timer[1])
+
+print(timer.shape)
+
+data_2 = np.array(data['PP_Model_B__HPP_Z_close'])
+
+data_3 = np.array(data['TSR0__Sign_Width'])
+
+print(data_2)
+
+print(data_2.shape)
+
+print(data_3)
+
+print(data_3.shape)
 
 
 
+plt.plot(timer, data_2)
+plt.plot(timer, data_3)
 
-
-print(values1.ndim)
-
-#plt.plot(timer, values1)
-#plt.plot(timer, values2)
-
-#plt.show()
+plt.show()

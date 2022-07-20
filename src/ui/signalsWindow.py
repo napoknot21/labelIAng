@@ -1,3 +1,5 @@
+from cProfile import label
+from tabnanny import check
 from tkinter import *
 from tkinter import messagebox
 import pandas as pd
@@ -67,7 +69,7 @@ class SignalsWindow:
 
     # Initialise a label for the window body (signals)
     def initialiseBodyLabel(self):
-        self.body = Label(self.window, bg="white", fg="Blue")
+        self.body = Frame (self.window, bg="white")
 
 
     # Initialise a label for the window buttons
@@ -92,35 +94,37 @@ class SignalsWindow:
 
     # Load sub label body
     def initialiseSubLabelBody(self):
-        self.main_frame = Frame(self.body)
-        self.main_frame.pack(fill=BOTH, expand=1)
+        self.body_frame = Frame(self.body, bg="white")
+        self.body_frame.place(relwidth=1, relheight=1, relx=0, rely=0)
 
-        self.sub_canvas = Canvas(self.main_frame, bg="white", height=350, highlightbackground="white", width=675)
-        self.sub_canvas.pack(side=LEFT, fill=BOTH, expand=1)
+        self.body_canvas = Canvas(self.body_frame, bg="white")
+        self.body_canvas.pack(side=LEFT, fill=BOTH, expand=1)
 
-        self.sb = Scrollbar(self.main_frame, orient=VERTICAL, command=self.sub_canvas.yview)
+        self.sb = Scrollbar(self.body_frame, orient=VERTICAL, command=self.body_canvas.yview)
         self.sb.pack(side=RIGHT, fill=Y)
-        self.configSubCanvas()
 
-        self.second_frame = Frame(self.sub_canvas, bg="white", height=350, highlightbackground="white", width=675)
-        self.sub_canvas.create_window((190, 0), window=self.second_frame, anchor="nw")
+        self.body_canvas.configure(yscrollcommand=self.sb.set)
+
+        self.body_canvas.bind('<Configure>', lambda e : self.__fill_canvas (e))
+
+        self.second_frame = Frame(self.body_canvas, bg="white")
+        self.item = self.body_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
         self._loadCheckbuttonsSignals()
-
-
-    def configSubCanvas(self):
-        self.sub_canvas.configure(yscrollcommand=self.sb.set)
-        self.sub_canvas.bind('<Configure>', lambda e: self.sub_canvas.configure(scrollregion=self.sub_canvas.bbox("all")))
 
 
     def _loadCheckbuttonsSignals(self):
         self.signals = []
         for col_name in self.data.columns:
+            label_block = Label ( self.second_frame, height=2, bg="white")
             value = IntVar()
             self.values.append(value)
-            checkbutton_signal = Checkbutton(self.second_frame, text=col_name, bg="white",
+            checkbutton_signal = Checkbutton(label_block, text=col_name, bg="white",
                 fg="blue", variable=value, onvalue=1, offvalue=0)
             self.signals.append(checkbutton_signal)
-        self.placeSignalsLabel()
+            label_block.pack(side="top", fill="both", expand=1)
+            checkbutton_signal.place(relx=0.5, rely=0.5, anchor=CENTER)
+        #self.placeSignalsLabel()
+
 
 
     # Place the exit & accept buttons in the fotter label
@@ -180,6 +184,12 @@ class SignalsWindow:
     def on_closing(self):
         if messagebox.askokcancel("Quit", "Do you really want to quit ?"):
             exit(0)
+
+
+    def __fill_canvas (self, event) :
+        canvas_width = event.width
+        self.body_canvas.itemconfig(self.item, width=canvas_width)
+        self.body_canvas.configure(scrollregion=self.body_canvas.bbox("all"))
 
 
     # Getter for the signals selected

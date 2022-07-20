@@ -4,6 +4,7 @@ from src.ui.assets import signalUI as sgUI
 from src.ui.assets import labelUI as lbUI
 from tkinter import *
 import time as tm
+import pandas as pd
 import numpy as np
 
 class MainWindow:
