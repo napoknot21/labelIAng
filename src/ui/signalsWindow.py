@@ -9,16 +9,16 @@ class SignalsWindow:
     # Constructor
     def __init__(self, filename_csv=None):
         self.values = []
-        self.signals_selected = None
+        self.signals_selected = []
         #self.readImportFile()
         self.readSource(filename_csv)  # We suppose the file is already verified
         self.window = Tk()
         self.initialiseWindow()
         # Load properties
-        self.loadProperties()
-        self.placeMainLabels()
+        self.LoadAndPlaceMainLabels()
         # Load sub properties
-        self.loadSubProperties()
+        self.loadAndPlaceSubProperties()
+        #Load and place the exit and next buttons
         self.placeButtonsSubLabel()
         # Main loop
         self.window.mainloop()
@@ -55,30 +55,26 @@ class SignalsWindow:
         self.window.iconphoto(False, p1)
 
 
-    # Load all main window properties
-    def loadProperties(self):
-        self.initialiseHeaderLabel()
-        self.initialiseBodyLabel()
-        self.initialiseBottonsLabel()
-
-
     # Initialise a label for the window header
-    def initialiseHeaderLabel(self):
+    def __initialiseHeaderLabel(self):
         self.header = Label(self.window, text="Select all Signals to work with", fg="blue")
 
 
     # Initialise a label for the window body (signals)
-    def initialiseBodyLabel(self):
+    def __initialiseBodyLabel(self):
         self.body = Frame (self.window, bg="white")
 
 
     # Initialise a label for the window buttons
-    def initialiseBottonsLabel(self):
+    def __initialiseBottonsLabel(self):
         self.footer = Label(self.window, fg="blue")
 
 
-    # Place by a grid method all main labels (label_text, body, footer)
-    def placeMainLabels(self):
+    # Place by a place method all main labels (label_text, body, footer)
+    def LoadAndPlaceMainLabels(self):
+        self.__initialiseHeaderLabel()
+        self.__initialiseBodyLabel()
+        self.__initialiseBottonsLabel()
         self.header.place(relwidth=1, relheight=.159, relx=0, rely=0)
         self.body.place(relwidth=1, relheight=.72, relx=0, rely=0.159 )
         self.footer.place(relwidth=1, relheight=.121, relx=0, rely=0.879)
@@ -86,33 +82,31 @@ class SignalsWindow:
 
 
     # Load all sub configs in main labels
-    def loadSubProperties(self):
-        self.initialiseSubLabelBody()
-        self.loadSubLabelFooter()
-        self.initialiseSubLabelButtons()
+    def loadAndPlaceSubProperties(self):
+        self.__initialiseSubLabelBody()
+        self.__loadSubLabelFooter()
+        self.__initialiseSubLabelButtons()
 
 
     # Load sub label body
-    def initialiseSubLabelBody(self):
-        self.body_frame = Frame(self.body, bg="white")
-        self.body_frame.place(relwidth=1, relheight=1, relx=0, rely=0)
-
-        self.body_canvas = Canvas(self.body_frame, bg="white")
+    def __initialiseSubLabelBody(self):
+        # Canvas for the label body
+        self.body_canvas = Canvas(self.body, bg="white")
         self.body_canvas.pack(side=LEFT, fill=BOTH, expand=1)
-
-        self.sb = Scrollbar(self.body_frame, orient=VERTICAL, command=self.body_canvas.yview)
+        # scrollbar for scrolling the signals options
+        self.sb = Scrollbar(self.body, orient=VERTICAL, command=self.body_canvas.yview)
         self.sb.pack(side=RIGHT, fill=Y)
-
+        # Canvas config
         self.body_canvas.configure(yscrollcommand=self.sb.set)
-
+        # Canvas bind option
         self.body_canvas.bind('<Configure>', lambda e : self.__fill_canvas (e))
-
+        # Second frame 
         self.second_frame = Frame(self.body_canvas, bg="white")
         self.item = self.body_canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
-        self._loadCheckbuttonsSignals()
+        self.__loadCheckbuttonsSignals()
 
 
-    def _loadCheckbuttonsSignals(self):
+    def __loadCheckbuttonsSignals(self):
         self.signals = []
         for col_name in self.data.columns:
             label_block = Label ( self.second_frame, height=2, bg="white")
@@ -123,12 +117,11 @@ class SignalsWindow:
             self.signals.append(checkbutton_signal)
             label_block.pack(side="top", fill="both", expand=1)
             checkbutton_signal.place(relx=0.5, rely=0.5, anchor=CENTER)
-        #self.placeSignalsLabel()
 
 
 
     # Place the exit & accept buttons in the fotter label
-    def loadSubLabelFooter(self):
+    def __loadSubLabelFooter(self):
         self.label_exit = Label(self.footer)
         self.label_exit.place(relheight=1, relwidth=.5, relx=0, rely=0)
 
@@ -137,18 +130,18 @@ class SignalsWindow:
 
 
     # Initialise the buttons "Accept" and "Exit" for the button_label
-    def initialiseSubLabelButtons(self):
+    def __initialiseSubLabelButtons(self):
         self.buttons = []
-        button_accept = Button(self.label_exit, text="Exit", width=45, command=self.on_closing,
-            bg='white', relief='groove')
-        self.buttons.append(button_accept)
-        button_exit = Button(self.label_accept, text="Next", width=45, command=self.submitValues,
+        button_exit = Button(self.label_exit, text="Exit", width=45, command=self.on_closing,
             bg='white', relief='groove')
         self.buttons.append(button_exit)
+        button_accept = Button(self.label_accept, text="Next", width=45, command=self.submitValues,
+            bg='white', relief='groove')
+        self.buttons.append(button_accept)
 
 
     def submitValues (self) :
-        self.signals_selected = []
+        #self.signals_selected = []
         for i, value in enumerate(self.values) :
             if value.get() == 1 :
                 self.signals_selected.append(self.data.columns[i])

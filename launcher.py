@@ -11,8 +11,8 @@ class Launcher :
 
 	#Constructor
 	def __init__(self) :
-		self.M = md.Model()
-		#self.LW = lw.LabelsWindow()
+		#self.M = md.Model()
+		self.LW = lw.LabelsWindow()
 		"""signals = ["Signal1", "Signal2", "Signal3", "Signal4"]
 		labels = [
 			lb.Label(0, "name1", "#ffffff", 0),
