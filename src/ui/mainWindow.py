@@ -17,8 +17,8 @@ class MainWindow:
         self.labels_entered = np.array(labels_entered)
         # Main list and variables for displaying informations
         self.graphic_video = None
-        self.graphic_signals = []
-        self.graphic_labels = []
+        self.graphic_signals = np.empty(len(self.signals_selected), dtype=sgUI.SignalUI)
+        self.graphic_labels = np.empty(len(self.labels_entered), dtype=lbUI.LabelUI)
         #Initialize functions window
         self.window = Tk()
         self.initWindow()
@@ -27,11 +27,10 @@ class MainWindow:
         #Load and place sub labels of HEADER
         self.loadAndPlaceSubLabelsHeader()
         self.graphic_video = vdUI.VideoUI(self.video_canvas, self.filename_video)
+
         # Print the number of frames of the video (auxiliary function)
-        self.__loadAndPlaceLabelFramesAndTime()
-        #self.__loadGraphicalLabel()
         self.loadAndPlaceSubLabelsBody()
-        #self.video = vd.Video(filename_video)
+
         self.loadAndPlaceGraphicalLabels()
         # Main loop
         self.window.mainloop()
@@ -97,13 +96,6 @@ class MainWindow:
         self.buttons_canvas.place(relx=.05, rely=.8, relwidth=.905, relheight=.15)
 
 
-    # Function called for load and places all sub widgets
-    def loadAndPlaceSubLabelsHeader(self):
-        self.__loadAndPlaceSubLabelsHeader()
-        self.__loadAndPlaceVideoCanvas()
-        self.__loadAndPlaceLabelsCanvas()
-
-
     def __loadAndPlaceSignalsLabel (self) :
         # Canvas for the signals blocks
         self.signals_canvas = Canvas (self.body, bg="blue")
@@ -118,6 +110,14 @@ class MainWindow:
         # second frame fot signals
         self.second_frame_signal = Frame (self.signals_canvas)
         self.item_signals = self.signals_canvas.create_window((0,0), window=self.second_frame_signal, anchor="nw")
+
+
+    # Function called for load and places all sub widgets
+    def loadAndPlaceSubLabelsHeader(self):
+        self.__loadAndPlaceSubLabelsHeader()
+        self.__loadAndPlaceVideoCanvas()
+        self.__loadAndPlaceLabelsCanvas()
+        self.__loadAndPlaceLabelsLabel()
     
 
     def __loadAndPlaceLabelsLabel (self) :
@@ -139,7 +139,6 @@ class MainWindow:
     # Load and Place the Frames for the signals/labels blocks
     def loadAndPlaceSubLabelsBody (self) :
         self.__loadAndPlaceSignalsLabel()
-        self.__loadAndPlaceLabelsLabel()
 
 
     def __loadAndPlaceLabelFramesAndTime (self) :
@@ -151,9 +150,10 @@ class MainWindow:
 
     # Private function for tranform the label to graphical labels (labelsUI)
     def __loadGraphicalLabels (self) : 
-        for label in self.labels_entered :
+        for i, label in enumerate(self.labels_entered) :
             labelUI = lbUI.LabelUI(self.second_frame_label, label)
-            self.graphic_labels.append(labelUI)
+            self.graphic_labels[i] = labelUI
+        print(self.graphic_labels)
     
 
     # private funtion for place (grid) all graphical labels
@@ -163,10 +163,23 @@ class MainWindow:
             label_block.pack(side="top", fill="both", expand=1)
 
 
+    def __loadGraphicalSignals (self) :
+        for i, signal in enumerate(self.signals_selected) :
+            signalUI = sgUI.SignalUI(self.second_frame_signal, signal)
+            self.graphic_signals[i] = signalUI
+
+
+    def __placeGraphicalSignals (self) :
+        pass
+
+
     #Load and place all graphical labels in the main window
     def loadAndPlaceGraphicalLabels (self) :
+        self.__loadAndPlaceLabelFramesAndTime()
         self.__loadGraphicalLabels()
         self.__placeGraphicalLabels()
+        self.__loadGraphicalSignals()
+        self.__placeGraphicalSignals()
 
 
     # Auxiliary function for dinamic the width of the label block
