@@ -121,12 +121,11 @@ class LabelsWindow:
     # Initialise the labels array with at least a single label
     def initLabelsArray (self):
         label = lb.Label(None, None, self.generateRandomColors(), 0)
-        self.labelsArray.append(label)
+        self.__addLabel(label)
 
 
     # Load and generate a graphic label bloc 
     def __loadGraphicLabelBlock (self, label ,defaultID_Var, defaultName_var) :
-        #self.labelsArray.append(label)
         label_block = Label (self.labels_frame, height=4, bg="white", fg="blue")
         # Specific label for the id block
         id_label = Label (label_block)
@@ -157,7 +156,7 @@ class LabelsWindow:
         icon_delete_label = Label(label_block)
         icon_delete_label.place(relwidth=.2, relheight=1, rely=0, relx=.8)
         # Button for deleting the current label_block 
-        button_delete = Button(icon_delete_label, text="Delete label", command=lambda : self.__destroyGraphicalLabelsBlock(label_block))
+        button_delete = Button(icon_delete_label, text="Delete label", command=lambda : self.__destroyGraphicalLabelsBlock(label_block, label.getPos() ))#label_block.destroy())#self.__destroyGraphicalLabelsBlock(label_block))
         button_delete["state"] = self.disableButtonLabels()
         button_delete.place(relx=.5, rely=.5, anchor=CENTER)
         
@@ -167,7 +166,7 @@ class LabelsWindow:
     def testGraphicalsLabels (self) :
         for i in range (5) :
             label = lb.Label(None, None, self.generateRandomColors(), i+1)
-            self.labelsArray.append(label)
+            self.__addLabel(label)
 
 
     # Grid all labels from the current label array
@@ -185,10 +184,17 @@ class LabelsWindow:
         self.label_button.pack(side="top", fill="both", expand=1)
     
 
-    def __destroyGraphicalLabelsBlock(self, label_block) :
+    def __destroyGraphicalLabelsBlock(self, label_block, id_block) :
+        for i, label in enumerate(self.labelsArray) :
+            if label.getPos() == id_block :
+                self.labelsArray[i] = None
+                self.__cleanArray()
         label_block.destroy()
         self.label_button.destroy()
-        self.LoadAndPlaceGraphicalLabels()
+        self.label_button = self.loadLabelAddButton()
+        self.graphicsArray.append(self.label_button)
+        self.label_button.pack(side="top", fill="both", expand=1)
+        #self.LoadAndPlaceGraphicalLabels()
         
 
     # submit values for the id label
@@ -198,7 +204,6 @@ class LabelsWindow:
             messagebox.showerror("Type id value", "Value must be an integer")
         else :
             content = int (widget.get())
-            print(content)
             label.setId(content)
 
 
@@ -209,7 +214,6 @@ class LabelsWindow:
             messagebox.showerror("Type name value", "Value must be a string")
         else :
             content = str(widget.get())
-            print(content)
             label.setName(content)
 
 
@@ -229,10 +233,13 @@ class LabelsWindow:
 
     def addGraphicalLabel (self) :
         len_labels = len(self.labelsArray)
-        label = lb.Label(len_labels, None, self.generateRandomColors(), len_labels)
-        self.labelsArray.append(label)
-        for label in self.labelsArray :
-            print(label.toString())
+        label = lb.Label(None, None, self.generateRandomColors(), len_labels)
+        self.__addLabel(label)
+        for label_block in self.graphicsArray :
+            label_block.destroy()
+        """for label in self.labelsArray :
+            print(label.toString())"""
+        self.label_button.destroy()
         self.LoadAndPlaceGraphicalLabels()
 
 
@@ -241,12 +248,6 @@ class LabelsWindow:
     def __addLabel (self, label):
         self.labelsArray.append(label)
 
-
-    def __deleteLabel (self, pos):
-        if len(self.labelsArray) == 0: return
-        if len(self.labelsArray) <= pos : return
-        self.labelsArray[pos] = None
-    
 
     def __cleanArray (self) :
         cmpt = 0
@@ -266,13 +267,6 @@ class LabelsWindow:
         if label1.getColor() != label2.getColor() : return False
         if label1.getPos() != label2.getPos() : return False
         return True
-
-
-    def __getLabelPosition (self, label) :
-        for i in range (len(self.labelsArray)):
-            if self.__compareTwoLabels(len(self.labelsArray[i]), label) :
-                return i
-        return False
  
 
     def __checkAndChangePosition(self) :
