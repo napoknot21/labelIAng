@@ -259,15 +259,7 @@ class LabelsWindow:
             if self.labelsArray[i] != None : newTab.append(self.labelsArray[i])
         self.labelsArray = newTab
         return self.labelsArray
-
-
-    def __compareTwoLabels (self, label1, label2):
-        if label1.getId() != label2.getId() : return False
-        if label1.getName() != label2.getName() : return False
-        if label1.getColor() != label2.getColor() : return False
-        if label1.getPos() != label2.getPos() : return False
-        return True
- 
+        
 
     def __checkAndChangePosition(self) :
         for i in range (len(self.labelsArray)) :

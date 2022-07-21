@@ -53,4 +53,4 @@ class Connexion :
 
     # getter for the filename_video and filename_csv file
     def getterFilenames(self):
-        return self.filename_video, self.filename_csv
+        return self.filename_video, self.filename_csv, self.data_csv

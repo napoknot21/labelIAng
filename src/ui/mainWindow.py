@@ -12,9 +12,9 @@ class MainWindow:
     np.random.seed(19680801)
 
     def __init__(self, signals_selected=None, filename_video=None, labels_entered=None):
-        self.signals_selected = signals_selected
+        self.signals_selected = np.array(signals_selected)
         self.filename_video = filename_video
-        self.labels_entered = labels_entered
+        self.labels_entered = np.array(labels_entered)
         # Main list and variables for displaying informations
         self.graphic_video = None
         self.graphic_signals = []
