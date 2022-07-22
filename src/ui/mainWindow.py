@@ -53,12 +53,12 @@ class MainWindow:
 
     # Load the header label
     def __loadHeader(self):
-        self.header = Label(self.window, bg="black")
+        self.header = Label(self.window, bg="white")
 
 
     # Load the body label
     def __loadBody(self):
-        self.body = Frame (self.window,bg="blue")
+        self.body = Frame (self.window,bg="light blue")
 
 
     # Load and place the main labels (header and body labels)
@@ -73,7 +73,7 @@ class MainWindow:
     def __loadAndPlaceSubLabelsHeader(self):
         self.video_label = Label(self.header, bg="light blue")
         self.video_label.place(relx=0, rely=0, relheight=1, relwidth=.65)
-        self.labels_label = Label(self.header, bg="green")
+        self.labels_label = Label(self.header, bg="white")
         self.labels_label.place(relx=.65, rely=0, relheight=1, relwidth=.35)
 
 
@@ -86,19 +86,19 @@ class MainWindow:
     #Frames for the video-info/ Labels-selector/ video-buttons 
     def __loadAndPlaceLabelsCanvas(self):
         # Video info label: Nb of frames and other informations
-        self.video_info = Label(self.labels_label, bg="brown")
+        self.video_info = Label(self.labels_label, bg="light blue")
         self.video_info.place(relx=.05, rely=.05, relwidth=.905, relheight=.15)
         # Label frames for the entered labels
-        self.labels_frame = Frame(self.labels_label, bg="brown")
+        self.labels_frame = Frame(self.labels_label, bg="light blue")
         self.labels_frame.place(relx=.05, rely=.25, relwidth=.905, relheight=.5)
         # Video controller label for the buttons
-        self.buttons_canvas = Label(self.labels_label,bg="brown")
+        self.buttons_canvas = Label(self.labels_label, bg="light blue")
         self.buttons_canvas.place(relx=.05, rely=.8, relwidth=.905, relheight=.15)
 
 
     def __loadAndPlaceSignalsLabel (self) :
         # Canvas for the signals blocks
-        self.signals_canvas = Canvas (self.body, bg="blue")
+        self.signals_canvas = Canvas (self.body, bg="white")
         self.signals_canvas.pack(side=LEFT, fill=BOTH, expand=1)
         # Scrollbar to the right side
         self.scrollbar_signal = Scrollbar (self.body, orient=VERTICAL, command=self.signals_canvas.yview)
@@ -122,7 +122,7 @@ class MainWindow:
 
     def __loadAndPlaceLabelsLabel (self) :
         # Canvas for labels 
-        self.labels_canvas = Canvas (self.labels_frame, bg="red")
+        self.labels_canvas = Canvas (self.labels_frame, bg="light blue")
         self.labels_canvas.pack(side=LEFT, fill=BOTH, expand=1)
         # Scrollbar for the labels
         self.labels_scroll = Scrollbar (self.labels_frame, orient=VERTICAL, command=self.labels_canvas.yview)
@@ -132,7 +132,7 @@ class MainWindow:
         # config the bind
         self.labels_canvas.bind('<Configure>', lambda e : self.__fill_canvas_labels(e))
         #Second frame (for print the labels blocks)
-        self.second_frame_label = Frame (self.labels_canvas, bg="black")
+        self.second_frame_label = Frame (self.labels_canvas, bg="light blue")
         self.item_labels = self.labels_canvas.create_window((0,0), window=self.second_frame_label, anchor="nw")
 
 
@@ -142,9 +142,9 @@ class MainWindow:
 
 
     def __loadAndPlaceLabelFramesAndTime (self) :
-        self.frames = Label (self.video_info, text="Total Frames: " + str(self.graphic_video.getTotalNumberFrames()),bg="blue")
+        self.frames = Label (self.video_info, text="Total Frames: " + str(self.graphic_video.getTotalNumberFrames()), bg="light blue")
         self.frames.place(relx=0, rely=0, relwidth=.5, relheight=1)
-        self.timer = Label (self.video_info, bg="black")
+        self.timer = Label (self.video_info, bg="light blue")
         self.timer.place(relx=0.5, rely=0, relwidth=.5, relheight=1)
 
 
@@ -153,7 +153,6 @@ class MainWindow:
         for i, label in enumerate(self.labels_entered) :
             labelUI = lbUI.LabelUI(self.second_frame_label, label)
             self.graphic_labels[i] = labelUI
-        print(self.graphic_labels)
     
 
     # private funtion for place (grid) all graphical labels
@@ -170,7 +169,9 @@ class MainWindow:
 
 
     def __placeGraphicalSignals (self) :
-        pass
+        for signalUI in self.graphic_signals :
+            signal_block = signalUI.loadGraphicalBlock()
+            signal_block.pack(side="top", fill="both", expand=1)
 
 
     #Load and place all graphical labels in the main window

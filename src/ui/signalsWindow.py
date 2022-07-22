@@ -109,7 +109,7 @@ class SignalsWindow:
     def __loadCheckbuttonsSignals(self):
         self.signals = []
         for col_name in self.data.columns:
-            label_block = Label ( self.second_frame, height=2, bg="white")
+            label_block = Canvas ( self.second_frame, height=50, bg="white")
             value = IntVar()
             self.values.append(value)
             checkbutton_signal = Checkbutton(label_block, text=col_name, bg="white",

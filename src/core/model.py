@@ -32,8 +32,11 @@ class Model :
 
         self.signals = []
 
+        name_time = data_connexion[2].columns[0]
+
         for name in self.S :
-            signal = sg.Signal(name, data_connexion[2].columns[0], data_connexion[2][name])
+            signal = sg.Signal(name, data_connexion[2][name_time], data_connexion[2][name])
             self.signals.append(signal)
+
 
         self.MW = mw.MainWindow(self.signals, data_connexion[0], data_labels)#self.LW.getLabels())

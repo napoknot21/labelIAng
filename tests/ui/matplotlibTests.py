@@ -1,67 +1,33 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
-from pandas import DataFrame as dt
-"""
-
-fig, ax1 = plt.subplots(1, 1)
-# make a little extra space between the subplots
-fig.subplots_adjust(hspace=0.5)
-
-dt = 0.01
-t = np.arange(0, 30, dt)
-
-# Fixing random state for reproducibility
-np.random.seed(19680801)
-
-
-nse1 = np.random.randn(len(t))                 # white noise 1
-nse2 = np.random.randn(len(t))                 # white noise 2
-r = np.exp(-t / 0.05)
- 
-cnse1 = np.convolve(nse1, r, mode='same') * dt   # colored noise 1
-cnse2 = np.convolve(nse2, r, mode='same') * dt   # colored noise 2
-
-# two signals with a coherent part and a random part
-s1 = 0.01 * np.sin(2 * np.pi * t) + cnse1
-s2 = 0.01 * np.sin(2 * np.pi * t) + cnse2
-
-ax1.plot(t, s1, t, s2)
-ax1.set_xlim(0, 5)
-ax1.set_xlabel('time')
-ax1.set_ylabel('s1 and s2')
-ax1.grid(True)
-"""
-
-data = pd.read_csv("tests/VehicleData.csv")
-
-timer_name = data.columns[0]
-
-print(timer_name)
-
-timer = np.array(data[timer_name])
-
-print(timer)
-
-print(timer[1])
-
-print(timer.shape)
-
-data_2 = np.array(data['PP_Model_B__HPP_Z_close'])
-
-data_3 = np.array(data['TSR0__Sign_Width'])
-
-print(data_2)
-
-print(data_2.shape)
-
-print(data_3)
-
-print(data_3.shape)
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 
-plt.plot(timer, data_2)
-plt.plot(timer, data_3)
 
-plt.show()
+from tkinter import *
+root = Tk()
+root.geometry("1000x200")
+root.title("matplotlib test")  #
+
+name = "matplotlib test for the tkinter insertion"
+timer = np.array([0.0, 0.1, 0.2, 0.5, 0.6, 0.615, 0.7, 0.78, 0.8, 0.83, 1.01, 1.02, 1.03, 1.04, 2.05, 5, 6.2, 6.3, 6.5, 7.4, 7.6, 8, 9.2, 9.5, 9.6, 9.7, 9.9, 10, 10.2, 10.5, 10.6, 12.7, 12.8, 12.9, 13, 15, 15.5, 15.6, 15.8, 16, 18 , 18.5, 19,20])
+values = np.array([1, 6, 5, 9, 3, 4, 33, 6 ,2, 1, 5, 8, 4, 5, 6, 2, 3, 9, 3, 2, 6, 9, 3, 5, 84, 65, 3, 9, 6, 5, 87, 9, 6, 5, 63, 52, 41, 85, 74, 96, 63, 56, 45, 78])
+
+def plotAGraph () :
+    axe_x = timer
+    axe_y = values
+    figure = plt.figure(figsize=(5, 4), dpi=100)
+    figure.add_subplot(111).plot(axe_x, axe_y)
+    #plt.plot(axe_x, axe_y)
+    chart = FigureCanvasTkAgg(figure, root)
+    chart.get_tk_widget().grid(row=5, column=0)
+
+    plt.grid()
+
+
+button = Button(root, text="Graph it !", command=plotAGraph)
+button.grid()
+
+
+root.mainloop()

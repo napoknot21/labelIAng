@@ -11,9 +11,9 @@ class Launcher :
 
 	#Constructor
 	def __init__(self) :
-		#self.M = md.Model()
+		self.M = md.Model()
 		#self.LW = lw.LabelsWindow()
-		Signals = ["Signal1", "Signal2", "Signal3", "Signal4", "Signal5", "Signal6", "Signal7", "Signal8"]
+		"""Signals = ["Signal1", "Signal2", "Signal3", "Signal4", "Signal5", "Signal6", "Signal7", "Signal8"]
 		labels = [
 			lb.Label(0, "name1", "#ffffff", 0),
 			lb.Label(1, "name2", "#ffff5d", 1),
@@ -28,7 +28,7 @@ class Launcher :
 			Signals,
 			"C:/Users/cmartin-/Desktop/app-pycharm-edition/MobEyeQ3.avi",
 			labels_entered=labels
-		)
+		)"""
 
 
 
