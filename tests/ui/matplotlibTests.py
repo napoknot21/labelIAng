@@ -1,33 +1,99 @@
+from matplotlib.pyplot import figure, show
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+class ZoomPan:
+    def __init__(self):
+        self.press = None
+        self.cur_xlim = None
+        self.cur_ylim = None
+        self.x0 = None
+        self.y0 = None
+        self.x1 = None
+        self.y1 = None
+        self.xpress = None
+        self.ypress = None
 
 
+    def zoom_factory(self, ax, base_scale = 2.):
+        def zoom(event):
+            cur_xlim = ax.get_xlim()
+            cur_ylim = ax.get_ylim()
+
+            xdata = event.xdata # get event x location
+            ydata = event.ydata # get event y location
+
+            if event.button == 'up':
+                # deal with zoom in
+                scale_factor = 1 / base_scale
+            elif event.button == 'down':
+                # deal with zoom out
+                scale_factor = base_scale
+            else:
+                # deal with something that should never happen
+                scale_factor = 1
+            #print (event.button)
+
+            new_width = (cur_xlim[1] - cur_xlim[0]) * scale_factor
+            new_height = (cur_ylim[1] - cur_ylim[0]) * scale_factor
+
+            relx = (cur_xlim[1] - xdata)/(cur_xlim[1] - cur_xlim[0])
+            rely = (cur_ylim[1] - ydata)/(cur_ylim[1] - cur_ylim[0])
+
+            ax.set_xlim([xdata - new_width * (1-relx), xdata + new_width * (relx)])
+            #ax.set_ylim([ydata - new_height * (1-rely), ydata + new_height * (rely)])
+            ax.figure.canvas.draw()
+
+        fig = ax.get_figure() # get the figure of interest
+        fig.canvas.mpl_connect('scroll_event', zoom)
+
+        return zoom
+
+    def pan_factory(self, ax):
+        def onPress(event):
+            if event.inaxes != ax: return
+            self.cur_xlim = ax.get_xlim()
+            self.cur_ylim = ax.get_ylim()
+            self.press = self.x0, self.y0, event.xdata, event.ydata
+            self.x0, self.y0, self.xpress, self.ypress = self.press
+
+        def onRelease(event):
+            self.press = None
+            ax.figure.canvas.draw()
+
+        def onMotion(event):
+            if self.press is None: return
+            if event.inaxes != ax: return
+            dx = event.xdata - self.xpress
+            dy = event.ydata - self.ypress
+            self.cur_xlim -= dx
+            self.cur_ylim -= dy
+            ax.set_xlim(self.cur_xlim)
+            #ax.set_ylim(self.cur_ylim)
+
+            ax.figure.canvas.draw()
+
+        fig = ax.get_figure() # get the figure of interest
+
+        # attach the call back
+        fig.canvas.mpl_connect('button_press_event',onPress)
+        fig.canvas.mpl_connect('button_release_event',onRelease)
+        fig.canvas.mpl_connect('motion_notify_event',onMotion)
+
+        #return the function
+        return onMotion
 
 
-from tkinter import *
-root = Tk()
-root.geometry("1000x200")
-root.title("matplotlib test")  #
+fig = figure()
 
-name = "matplotlib test for the tkinter insertion"
-timer = np.array([0.0, 0.1, 0.2, 0.5, 0.6, 0.615, 0.7, 0.78, 0.8, 0.83, 1.01, 1.02, 1.03, 1.04, 2.05, 5, 6.2, 6.3, 6.5, 7.4, 7.6, 8, 9.2, 9.5, 9.6, 9.7, 9.9, 10, 10.2, 10.5, 10.6, 12.7, 12.8, 12.9, 13, 15, 15.5, 15.6, 15.8, 16, 18 , 18.5, 19,20])
-values = np.array([1, 6, 5, 9, 3, 4, 33, 6 ,2, 1, 5, 8, 4, 5, 6, 2, 3, 9, 3, 2, 6, 9, 3, 5, 84, 65, 3, 9, 6, 5, 87, 9, 6, 5, 63, 52, 41, 85, 74, 96, 63, 56, 45, 78])
+ax = fig.add_subplot(111, autoscale_on=False, xlim=(-1,1.25), ylim=(-1,1.5), )
 
-def plotAGraph () :
-    axe_x = timer
-    axe_y = values
-    figure = plt.figure(figsize=(5, 4), dpi=100)
-    figure.add_subplot(111).plot(axe_x, axe_y)
-    #plt.plot(axe_x, axe_y)
-    chart = FigureCanvasTkAgg(figure, root)
-    chart.get_tk_widget().grid(row=5, column=0)
+ax.set_title('Click to zoom')
+x,y,s,c = np.random.rand(4,200)
+s *= 200
 
-    plt.grid()
-
-
-button = Button(root, text="Graph it !", command=plotAGraph)
-button.grid()
-
-
-root.mainloop()
+ax.scatter(x,y,s,c)
+scale = 1.1
+zp = ZoomPan()
+figZoom = zp.zoom_factory(ax, base_scale = scale)
+figPan = zp.pan_factory(ax)
+show()

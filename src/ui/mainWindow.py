@@ -58,7 +58,7 @@ class MainWindow:
 
     # Load the body label
     def __loadBody(self):
-        self.body = Frame (self.window,bg="light blue")
+        self.body = Frame (self.window,bg="grey", highlightbackground="white",  highlightthickness=0)
 
 
     # Load and place the main labels (header and body labels)
@@ -71,7 +71,7 @@ class MainWindow:
 
     #General Video label and general video-info/labels-info Label 
     def __loadAndPlaceSubLabelsHeader(self):
-        self.video_label = Label(self.header, bg="light blue")
+        self.video_label = Label(self.header)
         self.video_label.place(relx=0, rely=0, relheight=1, relwidth=.65)
         self.labels_label = Label(self.header, bg="white")
         self.labels_label.place(relx=.65, rely=0, relheight=1, relwidth=.35)
@@ -79,36 +79,39 @@ class MainWindow:
 
     #Video canvas (where the video is located)
     def __loadAndPlaceVideoCanvas(self):
-        self.video_canvas = Label (self.video_label,bg="light blue")
+        self.video_canvas = Label (self.video_label)
         self.video_canvas.place(relx=0.05, rely=0.05, relwidth=0.905, relheight=0.9)
 
 
     #Frames for the video-info/ Labels-selector/ video-buttons 
     def __loadAndPlaceLabelsCanvas(self):
         # Video info label: Nb of frames and other informations
-        self.video_info = Label(self.labels_label, bg="light blue")
+        self.video_info = Label(self.labels_label, )
         self.video_info.place(relx=.05, rely=.05, relwidth=.905, relheight=.15)
         # Label frames for the entered labels
-        self.labels_frame = Frame(self.labels_label, bg="light blue")
+        self.labels_frame = Frame(self.labels_label, )
         self.labels_frame.place(relx=.05, rely=.25, relwidth=.905, relheight=.5)
         # Video controller label for the buttons
-        self.buttons_canvas = Label(self.labels_label, bg="light blue")
+        self.buttons_canvas = Label(self.labels_label)
         self.buttons_canvas.place(relx=.05, rely=.8, relwidth=.905, relheight=.15)
 
 
     def __loadAndPlaceSignalsLabel (self) :
         # Canvas for the signals blocks
-        self.signals_canvas = Canvas (self.body, bg="white")
+        self.signals_canvas = Canvas (self.body, bg="white", highlightbackground="white",  highlightthickness=0)
         self.signals_canvas.pack(side=LEFT, fill=BOTH, expand=1)
         # Scrollbar to the right side
         self.scrollbar_signal = Scrollbar (self.body, orient=VERTICAL, command=self.signals_canvas.yview)
         self.scrollbar_signal.pack(side=RIGHT, fill=Y)
+        # Scrollbar to the button side
+        self.scrollbar_signal_bottom = Scrollbar (self.body, orient=HORIZONTAL)
+        #self.scrollbar_signal_bottom.pack(side=BOTTOM, fill=X) 
         # config for the signals canvas
         self.signals_canvas.config(yscrollcommand=self.scrollbar_signal.set)
         # bind the signal 
         self.signals_canvas.bind('<Configure>', lambda e : self.__fill_canvas_signals(e))
         # second frame fot signals
-        self.second_frame_signal = Frame (self.signals_canvas)
+        self.second_frame_signal = Frame (self.signals_canvas, highlightbackground="white",  highlightthickness=0)
         self.item_signals = self.signals_canvas.create_window((0,0), window=self.second_frame_signal, anchor="nw")
 
 
@@ -122,7 +125,7 @@ class MainWindow:
 
     def __loadAndPlaceLabelsLabel (self) :
         # Canvas for labels 
-        self.labels_canvas = Canvas (self.labels_frame, bg="light blue")
+        self.labels_canvas = Canvas (self.labels_frame)
         self.labels_canvas.pack(side=LEFT, fill=BOTH, expand=1)
         # Scrollbar for the labels
         self.labels_scroll = Scrollbar (self.labels_frame, orient=VERTICAL, command=self.labels_canvas.yview)
@@ -132,7 +135,7 @@ class MainWindow:
         # config the bind
         self.labels_canvas.bind('<Configure>', lambda e : self.__fill_canvas_labels(e))
         #Second frame (for print the labels blocks)
-        self.second_frame_label = Frame (self.labels_canvas, bg="light blue")
+        self.second_frame_label = Frame (self.labels_canvas,)
         self.item_labels = self.labels_canvas.create_window((0,0), window=self.second_frame_label, anchor="nw")
 
 
@@ -142,9 +145,9 @@ class MainWindow:
 
 
     def __loadAndPlaceLabelFramesAndTime (self) :
-        self.frames = Label (self.video_info, text="Total Frames: " + str(self.graphic_video.getTotalNumberFrames()), bg="light blue")
+        self.frames = Label (self.video_info, text="Total Frames: " + str(self.graphic_video.getTotalNumberFrames()))
         self.frames.place(relx=0, rely=0, relwidth=.5, relheight=1)
-        self.timer = Label (self.video_info, bg="light blue")
+        self.timer = Label (self.video_info)
         self.timer.place(relx=0.5, rely=0, relwidth=.5, relheight=1)
 
 
@@ -195,3 +198,6 @@ class MainWindow:
         canvas_width = event.width
         self.signals_canvas.itemconfig(self.item_signals, width=canvas_width)
         self.signals_canvas.configure(scrollregion=self.signals_canvas.bbox("all"))
+
+
+    
