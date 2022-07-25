@@ -13,8 +13,6 @@ class LabelsWindow:
         self.initWindow()
 
         self.colorsArray = []
-        self.idsArray = []
-        self.namesArray = []
 
         self.labelsArray = []
         self.graphicsArray = []
@@ -55,7 +53,7 @@ class LabelsWindow:
 
     # Body initialization
     def initBodyLabel(self):
-        self.body = Frame (self.window, bg="white")
+        self.body = Frame (self.window, bg="white",  highlightthickness=0)
 
 
     # Footer initialization
@@ -80,7 +78,7 @@ class LabelsWindow:
 
     # Load all sub-body labels in the window (scrollbar, canvas)
     def loadAndPlaceSubBodyWidgets(self):
-        self.sub_body = Canvas(self.body, bg="white", highlightbackground="white")
+        self.sub_body = Canvas(self.body, bg="white", highlightbackground="white",  highlightthickness=0)
         self.sub_body.pack(side=LEFT, fill=BOTH, expand=1)
         
         self.sb = Scrollbar(self.body, orient=VERTICAL, command=self.sub_body.yview)
@@ -89,14 +87,14 @@ class LabelsWindow:
         self.sub_body.configure(yscrollcommand=self.sb.set)
         self.sub_body.bind('<Configure>', lambda e: self.__fill_canvas(e))
         
-        self.labels_frame = Frame(self.sub_body, bg="white")
+        self.labels_frame = Frame(self.sub_body, bg="white",  highlightthickness=0)
         self.item = self.sub_body.create_window((0,0), window=self.labels_frame, anchor="nw")
      
 
 
     # Load text header for the labels canvas
     def __initHeaderLabel (self) :
-        label_header = Label (self.labels_frame,fg="blue", bg="white", height=1)
+        label_header = Canvas (self.labels_frame, bg="white", height=20)
 
         id_label = Label (label_header, text="id", fg="blue", bg="white")
         id_label.place(relwidth=.1, relheight=1, relx=0, rely=0)
@@ -107,7 +105,7 @@ class LabelsWindow:
         color_label = Label(label_header, text="Color", fg="blue", bg="white")
         color_label.place(relwidth=.2, relheight=1, relx=.6, rely=0)
         
-        icon_delete_label = Label(label_header, bg="white")
+        icon_delete_label = Canvas(label_header, bg="white")
         icon_delete_label.place(relwidth=.2, relheight=1, relx=.8, rely=0)
         return label_header
 
@@ -126,9 +124,9 @@ class LabelsWindow:
 
     # Load and generate a graphic label bloc 
     def __loadGraphicLabelBlock (self, label ,defaultID_Var, defaultName_var) :
-        label_block = Label (self.labels_frame, height=4, bg="white", fg="blue")
+        label_block = Canvas (self.labels_frame, height=60, bg="white", highlightbackground="white", highlightthickness=1)
         # Specific label for the id block
-        id_label = Label (label_block)
+        id_label = Canvas (label_block, highlightthickness=0)
         id_label.place(relwidth=.1, relheight=1, relx=0, rely=0)
         # Entry for the id label => get Id value (integer)
         id_entry = self.__loadEntryText(id_label, var=defaultID_Var)
@@ -136,7 +134,7 @@ class LabelsWindow:
         id_entry.bind('<Return>', lambda e : self.submitIdValue(widget=id_entry, label=label))
         id_entry.insert(0, str(label.getId()) if label.getId() is not None else "")
         # Specific label for the name block
-        name_label = Label(label_block)
+        name_label = Canvas(label_block, highlightthickness=0)
         name_label.place(relwidth=.5, relheight=1, relx=.1, rely=0)
         # Entry for the name label => get name value (string)
         name_entry = self.__loadEntryText(name_label, var=defaultName_var, width=35)
@@ -144,7 +142,7 @@ class LabelsWindow:
         name_entry.bind('<Return>', lambda e : self.submitNameValue(widget=name_entry, label=label))
         name_entry.insert(0, label.getName() if label.getName() is not None else "")
         # Specific label for the color block
-        color_label = Label(label_block)
+        color_label = Canvas (label_block, highlightthickness=0)
         color_label.place(relwidth=.2, relheight=1, relx=.6, rely=0)
         # Canvas for the color label => get color value (string)
         color_canvas = Canvas (color_label, bg=str(label.getColor()))
@@ -153,25 +151,18 @@ class LabelsWindow:
         color_button = self.__loadButtonSelectorColor(color_label, color_canvas, label)
         color_button.place(relx=.5, rely=.7, anchor=CENTER)
         # Specific label for the delete button
-        icon_delete_label = Label(label_block)
+        icon_delete_label = Canvas(label_block)
         icon_delete_label.place(relwidth=.2, relheight=1, rely=0, relx=.8)
         # Button for deleting the current label_block 
-        button_delete = Button(icon_delete_label, text="Delete label", command=lambda : self.__destroyGraphicalLabelsBlock(label_block, label.getPos() ))#label_block.destroy())#self.__destroyGraphicalLabelsBlock(label_block))
+        button_delete = Button(icon_delete_label, text="Delete label", command=lambda :self.__destroyGraphicalLabelsBlock(label_block, label.getPos()))
         button_delete["state"] = self.disableButtonLabels()
         button_delete.place(relx=.5, rely=.5, anchor=CENTER)
         
         return label_block
 
 
-    def testGraphicalsLabels (self) :
-        for i in range (5) :
-            label = lb.Label(None, None, self.generateRandomColors(), i+1)
-            self.__addLabel(label)
-
-
     # Grid all labels from the current label array
     def LoadAndPlaceGraphicalLabels (self) :
-        #self.testGraphicalsLabels()
         for i in range (len(self.labelsArray)) :
             id_var1  = ''
             name_var1 = ''
@@ -189,12 +180,13 @@ class LabelsWindow:
             if label.getPos() == id_block :
                 self.labelsArray[i] = None
                 self.__cleanArray()
+                self.__checkAndChangePosition()
+                break
         label_block.destroy()
         self.label_button.destroy()
         self.label_button = self.loadLabelAddButton()
         self.graphicsArray.append(self.label_button)
         self.label_button.pack(side="top", fill="both", expand=1)
-        #self.LoadAndPlaceGraphicalLabels()
         
 
     # submit values for the id label
@@ -237,8 +229,6 @@ class LabelsWindow:
         self.__addLabel(label)
         for label_block in self.graphicsArray :
             label_block.destroy()
-        """for label in self.labelsArray :
-            print(label.toString())"""
         self.label_button.destroy()
         self.LoadAndPlaceGraphicalLabels()
 
@@ -338,13 +328,16 @@ class LabelsWindow:
     def on_closing (self):
         if messagebox.askokcancel("Quit", "Do you really want to quit ?"):
             self.window.destroy()
+            exit(1)
 
 
     def showAllLabels (self):
+        self.labelsArray = np.array(self.labelsArray)
         if self.labelsArray is not None or len(self.labelsArray) != 0:
             for label in self.labelsArray :
                 label.toString()
             self.window.destroy()
+           
 
 
     def __fill_canvas (self, event) :
