@@ -8,12 +8,13 @@ The project is written in ```python3```, so if you have another version, upload 
 
 The project uses differents open source libraries like ```tkinter```,  ```pandas```, ```opencv```, ```matplotlib``` and ```PILL```.
 
-if you use ```pip``` method, you don't have to worry about installing dependencies yourself, The ```launcher.py``` does it automatically !
+it's important to have ```pip``` installer operational, don't have to worry about installing dependencies yourself, The ```launcher.py``` does it automatically !
 
-For ```conda``` users, you can install them manually by :
+However, if you want to installe them manually, run in your terminal/CMD :
 ```
-conda install pandas tk opencv-python matplotlib pillow
+pip3 install pandas tk opencv-python matplotlib pillow
 ```
+
 
 ## Run the Project
 
