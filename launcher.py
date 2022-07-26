@@ -1,4 +1,3 @@
-from re import L
 import sys, subprocess
 subprocess.check_call([sys.executable, 'extras/setup.py'])
 
@@ -12,7 +11,6 @@ class Launcher :
 	#Constructor
 	def __init__(self) :
 		self.M = md.Model()
-		#self.LW = lw.LabelsWindow()
 
 #Main function 
 def main () :
