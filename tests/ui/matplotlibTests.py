@@ -1,5 +1,6 @@
 from matplotlib.pyplot import figure, show
 import numpy as np
+import pandas as pd
 
 class ZoomPan:
     def __init__(self):
@@ -12,6 +13,9 @@ class ZoomPan:
         self.y1 = None
         self.xpress = None
         self.ypress = None
+
+
+
 
 
     def zoom_factory(self, ax, base_scale = 2.):

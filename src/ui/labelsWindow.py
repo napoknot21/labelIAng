@@ -110,9 +110,15 @@ class LabelsWindow:
     def loadAndPlaceSubBodyWidgets(self):
         """
         Load and place with the "place" method the widgets (Scrollbar, canvas, frames...) on the body label
+
+        Notes
+        -----
+            The '__fill_canvas(event)' funciton is a private function to config the scrollbar and the canvas yview
+
+            The 'highlightthickness' option in the Canvas/Labels tkinter object is useful to avoid black borders in the objects 
         """
         # Canvas for the labels objects
-        self.sub_body = Canvas(self.body, bg="white", highlightbackground="white",  highlightthickness=0)
+        self.sub_body = Canvas(self.body, bg="white", highlightbackground="white", highlightthickness=0)
         self.sub_body.pack(side=LEFT, fill=BOTH, expand=1)
         # Scrollbar 
         self.sb = Scrollbar(self.body, orient=VERTICAL, command=self.sub_body.yview)
@@ -128,24 +134,42 @@ class LabelsWindow:
 
     # Load text header for the labels canvas
     def __initHeaderLabel (self) :
-        label_header = Canvas (self.labels_frame, bg="white", height=20)
+        """
+        Load and place with the "place" method (dynamically) the header for the label objects (id, name, color)
+        and return a canvas object with the header in.
 
-        id_label = Label (label_header, text="id", fg="blue", bg="white")
+        Returns
+        -------
+            "label_header" : Canvas object with the header labels indicanting the id column, name column and color browser
+
+        Notes
+        -----
+            The header has a "icon_delete_label" label, a column, for putting a delete "label_block" canvas
+        """
+        # Main canvas
+        label_header = Canvas (self.labels_frame, bg="white", height=20, )
+        # Id label
+        id_label = Label (label_header, text="id", fg="blue", bg="white", font=(
+  'Verdana', 15))
         id_label.place(relwidth=.1, relheight=1, relx=0, rely=0)
-
+        # Name label
         name_label = Label( label_header, text="Name", fg="blue", bg="white")
         name_label.place(relwidth=.5, relheight=1, relx=.1, rely=0)
-        
+        # Color browser label
         color_label = Label(label_header, text="Color", fg="blue", bg="white")
         color_label.place(relwidth=.2, relheight=1, relx=.6, rely=0)
-        
+        # Icon delete canvas (not used)
         icon_delete_label = Canvas(label_header, bg="white")
         icon_delete_label.place(relwidth=.2, relheight=1, relx=.8, rely=0)
+        # return
         return label_header
 
 
     # Load and place the header fot the label canvas
     def loadAndPlaceHeaderLabel (self):
+        """
+        Function that loads the header labels with the 'pack' method
+        """
         label_header = self.__initHeaderLabel()
         label_header.pack(side="top", fill="both", expand=1)
 
@@ -158,6 +182,26 @@ class LabelsWindow:
 
     # Load and generate a graphic label bloc 
     def __loadGraphicLabelBlock (self, label ,defaultID_Var, defaultName_var) :
+        """
+        Create and return a graphic label block for the Label object (Label.py)
+
+        This function is private
+
+        Parameters
+        ----------
+            label : Label object (Label.py)
+                the label object to be associated with the label tkinter block
+
+            defaultID_Var : string
+                An string variable for the entry tkinter object to get the ID for the label object
+
+            defaultName_var : String 
+                String variable for the entry tkinter object to get the name for the label object
+
+        Returns
+        -------
+            a graphic label block (tkinter) for the Label object (Label.py)
+        """
         label_block = Canvas (self.labels_frame, height=60, bg="white", highlightbackground="white", highlightthickness=1)
         # Specific label for the id block
         id_label = Canvas (label_block, highlightthickness=0)
@@ -191,12 +235,15 @@ class LabelsWindow:
         button_delete = Button(icon_delete_label, text="Delete label", command=lambda :self.__destroyGraphicalLabelsBlock(label_block, label.getPos()))
         button_delete["state"] = self.disableButtonLabels()
         button_delete.place(relx=.5, rely=.5, anchor=CENTER)
-        
+        #return
         return label_block
 
 
     # Grid all labels from the current label array
     def LoadAndPlaceGraphicalLabels (self) :
+        """
+        
+        """
         for i in range (len(self.labelsArray)) :
             id_var1  = ''
             name_var1 = ''
