@@ -33,36 +33,63 @@ class LabelsWindow:
 
     # Initialize main window
     def initWindow(self):
+        """
+        Initialize the window propeties as the title, the geometry, and the icon image
+        """
         self.window.title("Video app")
         self.window.geometry("707x500")
         self.window.config(background="white")
-        self.loadIconWindow("extras/images/icon.png")
+        self.__loadIconWindow("extras/images/icon.png")
         #self.window.resizable(False, False)
 
 
     # Import an images and put it as icon window
-    def loadIconWindow(self, filePath):
+    def __loadIconWindow(self, filePath):
+        """
+        Load and import the icon window from a file path
+
+        This function is private
+
+        Parameters
+        ----------
+        filePath : str
+            The path to the icon window
+        """
         p1 = PhotoImage(file=filePath)
         self.window.iconphoto(False, p1)
 
 
     # Header initialization
     def initHeaderLabel(self):
+        """
+        Initialize the header label window for the title
+        """
         self.header = Label(self.window, text="Enter all labels needed", fg="blue")
 
 
     # Body initialization
     def initBodyLabel(self):
+        """
+        Initialize the body label window for Label objects
+        """
         self.body = Frame (self.window, bg="white",  highlightthickness=0)
 
 
     # Footer initialization
     def initFooterLabel(self):
+        """
+        Initialize the footer label window for buttons
+        """
         self.footer = Label(self.window, fg="blue")
 
 
     # Function initialization for all main label initialization functions
     def __loadMainLabels(self):
+        """
+        Load and run all load labels functions 
+
+        This function is private
+        """
         self.initHeaderLabel()
         self.initBodyLabel()
         self.initFooterLabel()
@@ -70,6 +97,9 @@ class LabelsWindow:
 
     # Function that places all the main labels
     def loadAndPlaceMainLabels(self):
+        """
+        Call the loader label functions and place them with "place" method (dynamically) on the window
+        """
         self.__loadMainLabels()
         self.header.place(relwidth=1, relheight=.159, relx=0, rely=0)
         self.body.place(relwidth=1, relheight=.72, relx=0, rely=0.159 )
@@ -78,15 +108,19 @@ class LabelsWindow:
 
     # Load all sub-body labels in the window (scrollbar, canvas)
     def loadAndPlaceSubBodyWidgets(self):
+        """
+        Load and place with the "place" method the widgets (Scrollbar, canvas, frames...) on the body label
+        """
+        # Canvas for the labels objects
         self.sub_body = Canvas(self.body, bg="white", highlightbackground="white",  highlightthickness=0)
         self.sub_body.pack(side=LEFT, fill=BOTH, expand=1)
-        
+        # Scrollbar 
         self.sb = Scrollbar(self.body, orient=VERTICAL, command=self.sub_body.yview)
         self.sb.pack(side=RIGHT, fill=Y)
-
+        # Scrollbar and canvas configuration
         self.sub_body.configure(yscrollcommand=self.sb.set)
         self.sub_body.bind('<Configure>', lambda e: self.__fill_canvas(e))
-        
+        # Frame to place the labels objects
         self.labels_frame = Frame(self.sub_body, bg="white",  highlightthickness=0)
         self.item = self.sub_body.create_window((0,0), window=self.labels_frame, anchor="nw")
      
