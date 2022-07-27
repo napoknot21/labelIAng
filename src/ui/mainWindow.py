@@ -11,7 +11,19 @@ class MainWindow:
 
     np.random.seed(19680801)
 
+    # Constructor 
     def __init__(self, signals_selected=None, filename_video=None, labels_entered=None):
+        """
+        Constructor for the main window
+
+        Parameters
+        ----------
+            signals_selected : List
+
+            filename_video : List
+
+            labels_entered : List
+        """
         self.signals_selected = np.array(signals_selected)
         self.filename_video = filename_video
         self.labels_entered = np.array(labels_entered)
@@ -27,7 +39,6 @@ class MainWindow:
         #Load and place sub labels of HEADER
         self.loadAndPlaceSubLabelsHeader()
         self.graphic_video = vdUI.VideoUI(self.video_canvas, self.filename_video)
-
         # Print the number of frames of the video (auxiliary function)
         self.loadAndPlaceSubLabelsBody()
 
@@ -38,6 +49,7 @@ class MainWindow:
 
     # Initialize the window
     def initWindow(self):
+        """Function to initialize the window properties"""
         self.window.title("Video app 1.0")
         self.window.state('zoomed')
         self.window.config(background="white")
@@ -47,22 +59,35 @@ class MainWindow:
 
     # Import an images and put it as icon window
     def __loadIconWindow(self, filePath):
+        """Function that loads an image as a window icon"""
         p1 = PhotoImage(file=filePath)
         self.window.iconphoto(False, p1)
 
 
-    # Load the header label
+    # Load the header
     def __loadHeader(self):
+        """Load the header label for the main window"""
         self.header = Label(self.window, bg="white")
 
 
-    # Load the body label
+    # Load the body
     def __loadBody(self):
+        """
+        Function that load the body label for the main window
+        
+        Notes
+        ----
+            The 'highlightthickness' option is used to hide the border default
+        """
         self.body = Frame (self.window,bg="grey", highlightbackground="white",  highlightthickness=0)
 
 
-    # Load and place the main labels (header and body labels)
+    # Load and place
     def loadAndPlaceMainLabels(self):
+        """
+        Function that load and place the main labels for the main window loading 
+        from other private functions with the 'place' method.
+        """
         self.__loadHeader()
         self.__loadBody()
         self.header.place(x=0, y=0, relwidth=1, relheight=.65)
@@ -71,6 +96,17 @@ class MainWindow:
 
     #General Video label and general video-info/labels-info Label 
     def __loadAndPlaceSubLabelsHeader(self):
+        """
+        Private function that loads the sub widgets of the head.
+
+        Notes
+        -----
+            'video_label' : The principal label for the video.
+
+            'labels_label' : The principal label for the Label object (Label.py).
+
+            The tkinter labels are placed with the 'place' method.
+        """
         self.video_label = Label(self.header)
         self.video_label.place(relx=0, rely=0, relheight=1, relwidth=.65)
         self.labels_label = Label(self.header, bg="white")
@@ -79,13 +115,33 @@ class MainWindow:
 
     #Video canvas (where the video is located)
     def __loadAndPlaceVideoCanvas(self):
+        """
+        Private function to load and place the video canvas into the 'video_label' attribute
+
+        Notes
+        -----
+            'video_canvas' : The canvas (tkinter) where the video is showed
+        
+            The tkinter canvas is placed with the 'place' method
+        """
         self.video_canvas = Label (self.video_label)
         self.video_canvas.place(relx=0.05, rely=0.05, relwidth=0.905, relheight=0.9)
 
 
-    #Frames for the video-info/ Labels-selector/ video-buttons 
+    # Frames for the video-info/ Labels-selector/ video-buttons 
     def __loadAndPlaceLabelsCanvas(self):
-        # Video info label: Nb of frames and other informations
+        """
+        Private function that loads the place the Sub labels for 'labels_label'
+
+        Notes
+        -----
+            'video_info' : Label (tkinter) where the video information is showed (number of frames, etc)
+
+            'labels_frame" : Frame (tkinter) where the labelsUI will be placed 
+
+            'buttons_canvas' : Label (tkinter) where the buttons video controllers will be placed
+        """
+        # Video info label: Nb of frames and other information
         self.video_info = Label(self.labels_label, )
         self.video_info.place(relx=.05, rely=.05, relwidth=.905, relheight=.15)
         # Label frames for the entered labels
@@ -96,7 +152,15 @@ class MainWindow:
         self.buttons_canvas.place(relx=.05, rely=.8, relwidth=.905, relheight=.15)
 
 
+    # Place signalsUI elements
     def __loadAndPlaceSignalsLabel (self) :
+        """
+        Private function to load and configure the 'labels_frame' for placing the signalsUI elements/objects
+
+        Notes
+        -----
+            
+        """
         # Canvas for the signals blocks
         self.signals_canvas = Canvas (self.body, bg="white", highlightbackground="white",  highlightthickness=0)
         self.signals_canvas.pack(side=LEFT, fill=BOTH, expand=1)
@@ -117,6 +181,7 @@ class MainWindow:
 
     # Function called for load and places all sub widgets
     def loadAndPlaceSubLabelsHeader(self):
+        """l"""
         self.__loadAndPlaceSubLabelsHeader()
         self.__loadAndPlaceVideoCanvas()
         self.__loadAndPlaceLabelsCanvas()
