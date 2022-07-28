@@ -108,7 +108,7 @@ class SignalUI :
     # Setting
     def pan_plot (self, ax) :
         """
-        Funciton that manage the events process for the panning plot
+        Function that manage the events process for the panning plot
         """
         def onPress (event) :
             if event.inaxes != ax: return

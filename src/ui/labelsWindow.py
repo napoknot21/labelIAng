@@ -61,25 +61,19 @@ class LabelsWindow:
 
     # Header initialization
     def initHeaderLabel(self):
-        """
-        Initialize the header label window for the title
-        """
+        """Initialize the header label window for the title"""
         self.header = Label(self.window, text="Enter all labels needed", fg="blue")
 
 
     # Body initialization
     def initBodyLabel(self):
-        """
-        Initialize the body label window for Label objects
-        """
+        """Initialize the body label window for Label objects"""
         self.body = Frame (self.window, bg="white",  highlightthickness=0)
 
 
     # Footer initialization
     def initFooterLabel(self):
-        """
-        Initialize the footer label window for buttons
-        """
+        """Initialize the footer label window for buttons"""
         self.footer = Label(self.window, fg="blue")
 
 
