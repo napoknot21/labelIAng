@@ -245,7 +245,7 @@ class LabelsWindow:
         # Entry for the id label => get Id value (integer)
         id_entry = self.__loadEntryText(id_label, var=defaultID_Var)
         id_entry.place(relx=.5, rely=.5, anchor=CENTER)
-        id_entry.bind('<Return>', lambda e : self.submitIdValue(widget=id_entry, label=label))
+        id_entry.bind('<Return>', lambda e : self.__checkSubmitIdValue(widget=id_entry, label=label))
         id_entry.insert(0, str(label.getId()) if label.getId() is not None else "")
         # Specific label for the name block
         name_label = Canvas(label_block, highlightthickness=0)
@@ -269,7 +269,7 @@ class LabelsWindow:
         icon_delete_label.place(relwidth=.2, relheight=1, rely=0, relx=.8)
         # Button for deleting the current label_block 
         button_delete = Button(icon_delete_label, text="Delete label", command=lambda :self.__destroyGraphicalLabelsBlock(label_block, label.getPos()))
-        button_delete["state"] = self.disableButtonLabels()
+        button_delete["state"] = DISABLED if len(self.labelsArray) < 2 else NORMAL
         button_delete.place(relx=.5, rely=.5, anchor=CENTER)
         #return
         return label_block
@@ -341,8 +341,19 @@ class LabelsWindow:
         self.label_button.pack(side="top", fill="both", expand=1)
         
 
-    # submit values for the id label
-    def submitIdValue (self, widget, label) :
+    # Checking
+    def __checkSubmitIdValue (self, widget, label) :
+        """
+        Check the ID attribute format (integer) of the label before to submit it
+
+        Parameters
+        ----------
+            widget : Entry (tkinter)
+                Source widget for the ID variable
+            
+            label : Label object (label.py)
+                The label where the value (ID) will be set
+        """
         content = widget.get()
         if not content.isnumeric() :
             messagebox.showerror("Type id value", "Value must be an integer")
@@ -351,8 +362,19 @@ class LabelsWindow:
             label.setId(content)
 
 
-    # Check if the name value is valid strning format
+    # Checking
     def submitNameValue (self, widget, label) :
+        """
+        Check the NAME attribute format (String) of the label before to submit it
+
+        Parameters
+        ----------
+            widget : Entry (tkinter)
+                Source widget for the NAME variable
+            
+            label : Label object (label.py)
+                The label where the value (NAME) will be set
+        """
         content = widget.get()
         if not isinstance(widget.get(), str) :
             messagebox.showerror("Type name value", "Value must be a string")
@@ -361,22 +383,22 @@ class LabelsWindow:
             label.setName(content)
 
 
-    #Check if the label is at least 1, and the disable or enable the deleting button
-    def disableButtonLabels (self) :
-        if len(self.labelsArray) <= 1 : return DISABLED
-        return NORMAL
-
-
+    # Loading
     def loadLabelAddButton (self) :
         """Function that loads the label containing the adder button"""
         label_addButton = Label (self.labels_frame, height=4,bg="white")
-
+        # Adder button
         add_button = Button (label_addButton, text="Add a new Label", command=self.addGraphicalLabel)
         add_button.place(relx=.5, rely=.5, anchor=CENTER)
         return label_addButton
 
 
+    # Adding
     def addGraphicalLabel (self) :
+        """
+        Function that creates a new Label object (label.py), adds it to the 'ArrayLabels', destroyes the other labelsUI and the reloads 
+        all graphical labels with the new one included 
+        """
         len_labels = len(self.labelsArray)
         label = lb.Label(None, None, self.generateRandomColors(), len_labels)
         self.__addLabel(label)
@@ -388,12 +410,20 @@ class LabelsWindow:
 
     #################### self.labelsArray fonctions ############################
 
-
+    # Adding
     def __addLabel (self, label):
-        """Private function that adds a label object to the 'labelsArray list'"""
+        """
+        Private function that adds a label object to the 'labelsArray list'
+        
+        Parameters
+        ----------
+            label : Label object (label.py)
+                The label object to add to the 'labelsArray' list
+        """
         self.labelsArray.append(label)
 
 
+    # Cleaning
     def __cleanArray (self) :
         """Private funciton that cleans the None values from the 'labelsArray' list and resize the list depending the number of None values"""
         cmpt = 0
@@ -404,10 +434,10 @@ class LabelsWindow:
         for i in range (len(self.labelsArray)) :
             if self.labelsArray[i] != None : newTab.append(self.labelsArray[i])
         self.labelsArray = newTab
-        print(self.labelsArray)
         return self.labelsArray
         
 
+    # Checking
     def __checkAndChangePosition(self) :
         """
         Private function that checks the position attribute of labels from the 'labelsArray' list
@@ -424,28 +454,78 @@ class LabelsWindow:
     ########################################################################
 
 
-    # Load and generate a entry for any label (parentWindow )
+    # Loading
     def __loadEntryText (self, parentWindow, var, width=3) :
+        """
+        Private function that loads and generates an entry for any graphical label (parentWindow)
+        
+        Parameters
+        ----------
+            parentWindow : Label/Canvas (tkinter)
+                The Label canvas where the entry text will be placed
+
+            var : string/Integer
+                The variable that capture the text entered by the user
+
+            width : integer
+                Default width (3) for the entry text box size
+        
+        Returns
+        -------
+            text : Entry (tkinter)
+                The entry tkinter widget
+        """
         text = Entry (parentWindow, textvariable=var, width=width)
         return text
 
     
     # Button selector for changing the canvas color of canvas_colored
     def __loadButtonSelectorColor (self, parentWindow, canvas_colored, label) :
+        """
+        Parameters
+        ----------
+            parentWindow : Label/Canvas (tkinter)
+                The parent window of the button color selector
+
+            canvas_colored : Canvas (tkinter)
+                The canvas that will display the color selected
+
+            label : Label object (Label.py)
+                The label that will be modified by the precedents parameters
+
+        Returns
+        -------
+            button_color : Button (tkinter)
+                The main button that manage the label's color (label.py)
+        """
         button_color = Button(parentWindow, text="Change", command=lambda : canvas_colored.configure(bg=self.__colorBrowserChange(label)))
         return button_color
 
 
     # Color browser 
     def __colorBrowserChange (self, label):
+        """
+        Private function that open a browser window in order to select a color for the curretn label (tkinter)
+
+        Parameters
+        ----------
+            label : Label object (Label.py)
+                The current label to be modified
+
+        Returns
+        -------
+            color[i] : Tuple
+                Tuple with the RGB values for the color 
+        """
         color = askcolor(title="Select a new Color")
         if not self.__searchElement(color[1]) :
             label.setColor(color[1])
             return color[1]
 
 
-    # Generate a new random color
+    # Generation
     def generateRandomColors (self) :
+        """Function that generates random colors with the numpy random number generator"""
         random_color = tuple(np.random.choice(range(255), size=3))
         random_color = "#" + str('%02x%02x%02x' % random_color)
         if not self.__searchElement(random_color) :
@@ -454,8 +534,24 @@ class LabelsWindow:
         self.generateRandomColors()
 
 
-    # Return True if the random color is in the colorsArrays and False else
+    # Searching
     def __searchElement (self, random_color) :
+        """
+        Private function that seraches and checks if the random color is already taken in other graphical label 
+
+        Parameters
+        ----------
+            random_color : Tuple
+                The random color that will be compared to the other labels color attribute
+
+        Returns
+        -------
+            True : Boolean
+                if the random color is already taken in other graphical label
+
+            False : Boolean
+                If the random color is not taken in other graphical label (so , it's possible to choice it)
+        """
         if not self.labelsArray : #if self.colorsArrays has no element
             return False
         for label in self.labelsArray :
@@ -463,16 +559,37 @@ class LabelsWindow:
         return False
 
 
+    # Loading and Placing
     def __loadSubLabelFooter(self):
+        """
+        Private function that loads and places the sub labels for the footer with the 'place' method (dynamical)
+
+        Notes
+        -----
+            'label_exit' : Label (tkinter)
+                Label where the 'Exit' button will be placed
+
+            'label_accept' : Label (tkinter)
+                Label where the 'Next' button (submit values button) will be placed
+        """
+        # Exit label
         self.label_exit = Label(self.footer)
         self.label_exit.place(relheight=1, relwidth=.5, relx=0, rely=0)
-
+        # Accept label
         self.label_accept = Label(self.footer,)
         self.label_accept.place(relheight=1, relwidth=.5, relx=0.5, rely=0)
 
 
-    # Initialise the buttons "Accept" and "Exit" for the button_label
+    # Initialising
     def __initialiseSubLabelButtons(self):
+        """
+        Private function that initialise the buttons "Accept" and "Exit" properties
+        
+        Notes
+        -----
+            'buttons' : List
+                Arrary list containing the footer buttons
+        """
         self.buttons = []
         button_exit = Button(self.label_exit, text="Exit", width=45, command=self.on_closing,
             bg='white', relief='groove')
@@ -482,21 +599,32 @@ class LabelsWindow:
         self.buttons.append(button_accept)
 
 
-    # Place the "accpet button nexto to the "exit" one
+    # Placing
     def loadAndPlaceFooterButtons(self):
+        """Function that Loads and places the 'accpet button' next to the "exit" one with the place method"""
         self.__loadSubLabelFooter()
         self.__initialiseSubLabelButtons()
         for button in self.buttons:
             button.place(relx=.5, rely=0.5, anchor=CENTER)
 
 
+    # Closing
     def on_closing (self):
+        """Function that open a confirmation action window : Ask if you really want to close the window so the program"""
         if messagebox.askokcancel("Quit", "Do you really want to quit ?"):
             self.window.destroy()
             exit(1)
 
 
+    # Checking
     def checkAllLabels (self):
+        """
+        Function that checks all the labels entered status (no None attributes)
+
+        Notes
+        -----
+            If there's no problem with, the 'labelsArray' will be converted to a numpy Array in order to improve the management
+        """
         if self.labelsArray is None or len(self.labelsArray) == 0: 
             messagebox.showerror("Labels", "Your need to enter at least one label")                   
             return
@@ -508,20 +636,32 @@ class LabelsWindow:
         self.showAllLabels()
         
 
+    # Showing 
     def showAllLabels (self) :
-        #self.labelsArray = np.array(self.labelsArray)
+        """Function that prints in the terminal/outuput the labels entered in a 'toString' format"""
         if self.labelsArray is not None or len(self.labelsArray) != 0:
             for label in self.labelsArray :
                 label.toString()
             self.window.destroy()
            
 
-
+    # Events
     def __fill_canvas (self, event) :
+        """
+        Private function that fills and configures the scorllbar width depending the main window size
+        
+        Parameters
+        ----------
+            event : Event
+                The event of resizing the main window
+        """
         canvas_width = event.width
         self.sub_body.itemconfig(self.item, width=canvas_width)
         self.sub_body.configure(scrollregion=self.sub_body.bbox("all"))
 
 
+    # Getter
     def getLabels (self) :
+        """Getter for the labelsArray numpy array"""
         return self.labelsArray
+        
