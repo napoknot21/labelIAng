@@ -12,7 +12,7 @@ class MainWindow:
     np.random.seed(19680801)
 
     # Constructor 
-    def __init__(self, signals_selected=None, filename_video=None, labels_entered=None):
+    def __init__(self, signals_selected, filename_video, labels_entered):
         """
         Constructor for the main window
 
@@ -35,10 +35,10 @@ class MainWindow:
             'graphic_video' : VideoUI.py
                 A videoUI.py object in order to display the video
 
-            'graphic_signals' = List
+            'graphic_signals' : List
                 Numpy array for all graphic signals
 
-            'graphic_labels' = List
+            'graphic_labels' : List
                 Numpy array for all graphic labels
 
         """
@@ -67,7 +67,7 @@ class MainWindow:
 
     # Initialize the window
     def initWindow(self):
-        """Function to initialize the window properties"""
+        """Function that initializes the window properties"""
         self.window.title("Video app 1.0")
         self.window.state('zoomed')
         self.window.config(background="white")
@@ -77,7 +77,14 @@ class MainWindow:
 
     # Import an images and put it as icon window
     def __loadIconWindow(self, filePath):
-        """Function that loads an image as a window icon"""
+        """
+        Function that loads an image as a window icon
+        
+        Parameters
+        ----------
+            filePath : String
+                The image path
+        """
         p1 = PhotoImage(file=filePath)
         self.window.iconphoto(False, p1)
 

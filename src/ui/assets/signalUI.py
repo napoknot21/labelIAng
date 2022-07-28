@@ -1,7 +1,4 @@
-from ast import Return
-from src.core import signal as sg
 from tkinter import *
-from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 import matplotlib.pyplot as plt
@@ -15,7 +12,6 @@ class SignalUI :
         self.master = master
         self.signal = signal
         self.initMatPlotLibVariables()
-        #self.press = None
         
 
     def initMatPlotLibVariables (self) :
@@ -42,14 +38,6 @@ class SignalUI :
         self.plotAGraph(signal_side)
 
         return block_signal
-
-
-    def getMaster (self) :
-        return self.master
-
-
-    def getSignal (self) : 
-        return self.signal
 
 
     def zoom_plot (self, ax, base_scale=2.) :
@@ -136,3 +124,11 @@ class SignalUI :
 
     def getAx (self) :
         return self.ax
+
+    
+    def getMaster (self) :
+        return self.master
+
+
+    def getSignal (self) : 
+        return self.signal

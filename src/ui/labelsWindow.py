@@ -135,7 +135,7 @@ class LabelsWindow:
     # Load text header for the labels canvas
     def __initHeaderLabel (self) :
         """
-        Load and place with the "place" method (dynamically) the header for the label objects (id, name, color)
+        Private function that loads and places with the "place" method (dynamically) the header for the label objects (id, name, color)
         and return a canvas object with the header in.
 
         Returns
@@ -145,6 +145,21 @@ class LabelsWindow:
         Notes
         -----
             The header has a "icon_delete_label" label, a column, for putting a delete "label_block" canvas
+
+            'label_header' : Canvas (tkinter)
+                The canvas (tkinter) containing the label object
+
+            'id_label' : Label (tkinter)
+                The label containing the id column
+
+            'name_label' : Label (tkinter)
+                The label containing the name column
+
+            'color_label' : Label (tkinter)
+                The label containing the color column
+
+            'icon_delete_label' : Canvas (tkinter)
+                NOT USED (only for rezising the block label)
         """
         # Main canvas
         label_header = Canvas (self.labels_frame, bg="white", height=20, )
@@ -169,13 +184,19 @@ class LabelsWindow:
     def loadAndPlaceHeaderLabel (self):
         """
         Function that loads the header labels with the 'pack' method
+
+        Notes
+        -----
+            'label_header' : Label (tkinter)
+                The label object containing the header labels (label.py)
         """
         label_header = self.__initHeaderLabel()
         label_header.pack(side="top", fill="both", expand=1)
 
 
-    # Initialise the labels array with at least a single label
+    # Initialise
     def initLabelsArray (self):
+        """Function that initialise the labels array with at least a single label"""
         label = lb.Label(None, None, self.generateRandomColors(), 0)
         self.__addLabel(label)
 
@@ -200,7 +221,22 @@ class LabelsWindow:
 
         Returns
         -------
-            a graphic label block (tkinter) for the Label object (Label.py)
+            'label_block' : Canvas (tkinter) 
+                The graphic label block for the Label object (Label.py)
+
+        Notes
+        -----
+            'id_label' : Canvas (tkinter)
+                The canvas containing the id entrybox
+
+            'name_label' : Canvas (tkinter)
+                The canvas containing the name entrybox
+
+            'color_label' : Canvas (tkinter)
+                The canvas containing the color entrybox
+
+            'icon_delete_label' : Canvas (tkinter)
+                The canvas containing the delete button 
         """
         label_block = Canvas (self.labels_frame, height=60, bg="white", highlightbackground="white", highlightthickness=1)
         # Specific label for the id block
@@ -242,7 +278,20 @@ class LabelsWindow:
     # Grid all labels from the current label array
     def LoadAndPlaceGraphicalLabels (self) :
         """
-        
+        Function that loads and places labels graphical blocks in the frame
+
+        Notes
+        -----
+            'id_var1' : String
+                variable for the recuperation of the id entry
+
+            'name_var1' : String
+                Variable for the recuperation of the name entry
+
+             'label_button" : Label (tkinter)
+                The label containing the 'add_button"
+
+            The 'graphicsArray' list, store the graphical labels blocks in order to manage them properly
         """
         for i in range (len(self.labelsArray)) :
             id_var1  = ''
@@ -256,7 +305,27 @@ class LabelsWindow:
         self.label_button.pack(side="top", fill="both", expand=1)
     
 
+    # Destroy the labels Blocks
     def __destroyGraphicalLabelsBlock(self, label_block, id_block) :
+        """
+        Private function that destroys the graphical labels Block
+
+        Parameters
+        ----------
+            'label_block': Canvas (tkinter)
+                The graphical labels Block to be destroyed
+
+            'id_block': string
+                The id of the graphical labels Block to be destroyed
+
+        Notes
+        -----
+            'label_button' : Canvas (tkinter)
+                The label container the adder button to be destroyed
+
+            'graphicsArray' : List
+                Numpy list where graphical label blocks are stored 
+        """
         for i, label in enumerate(self.labelsArray) :
             if label.getPos() == id_block :
                 self.labelsArray[i] = None
@@ -264,7 +333,9 @@ class LabelsWindow:
                 self.__checkAndChangePosition()
                 break
         label_block.destroy()
+        # destroy the actual label for the adder button
         self.label_button.destroy()
+        # Load and place a new label for the adder button
         self.label_button = self.loadLabelAddButton()
         self.graphicsArray.append(self.label_button)
         self.label_button.pack(side="top", fill="both", expand=1)
@@ -297,8 +368,9 @@ class LabelsWindow:
 
 
     def loadLabelAddButton (self) :
+        """Function that loads the label containing the adder button"""
         label_addButton = Label (self.labels_frame, height=4,bg="white")
-        
+
         add_button = Button (label_addButton, text="Add a new Label", command=self.addGraphicalLabel)
         add_button.place(relx=.5, rely=.5, anchor=CENTER)
         return label_addButton
@@ -316,11 +388,14 @@ class LabelsWindow:
 
     #################### self.labelsArray fonctions ############################
 
+
     def __addLabel (self, label):
+        """Private function that adds a label object to the 'labelsArray list'"""
         self.labelsArray.append(label)
 
 
     def __cleanArray (self) :
+        """Private funciton that cleans the None values from the 'labelsArray' list and resize the list depending the number of None values"""
         cmpt = 0
         for i in range (len(self.labelsArray)) :
             if self.labelsArray[i] == None : cmpt += 1
@@ -329,10 +404,19 @@ class LabelsWindow:
         for i in range (len(self.labelsArray)) :
             if self.labelsArray[i] != None : newTab.append(self.labelsArray[i])
         self.labelsArray = newTab
+        print(self.labelsArray)
         return self.labelsArray
         
 
     def __checkAndChangePosition(self) :
+        """
+        Private function that checks the position attribute of labels from the 'labelsArray' list
+        and compares them with the position of graphical labels in the 'graphicArray' list
+
+        Notes
+        -----
+        If it's necessary, the function well change the position attribute
+        """
         for i in range (len(self.labelsArray)) :
             if self.labelsArray[i].getPos() != i :
                 self.labelsArray[i].setPos(i)
@@ -393,7 +477,7 @@ class LabelsWindow:
         button_exit = Button(self.label_exit, text="Exit", width=45, command=self.on_closing,
             bg='white', relief='groove')
         self.buttons.append(button_exit)
-        button_accept = Button(self.label_accept, text="Next", width=45, command=self.showAllLabels,
+        button_accept = Button(self.label_accept, text="Next", width=45, command=self.checkAllLabels,
             bg='white', relief='groove')
         self.buttons.append(button_accept)
 
@@ -412,8 +496,20 @@ class LabelsWindow:
             exit(1)
 
 
-    def showAllLabels (self):
+    def checkAllLabels (self):
+        if self.labelsArray is None or len(self.labelsArray) == 0: 
+            messagebox.showerror("Labels", "Your need to enter at least one label")                   
+            return
+        for label in self.labelsArray :
+            if (label.getId() is None) or (label.getName() is None or len(label.getName()) == 0) or (label.getColor() is None or len(label.getColor()) == 0) :
+                messagebox.showerror("Labels content", "All labels must have a content")                   
+                return
         self.labelsArray = np.array(self.labelsArray)
+        self.showAllLabels()
+        
+
+    def showAllLabels (self) :
+        #self.labelsArray = np.array(self.labelsArray)
         if self.labelsArray is not None or len(self.labelsArray) != 0:
             for label in self.labelsArray :
                 label.toString()

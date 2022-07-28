@@ -7,7 +7,20 @@ import pandas as pd
 class SignalsWindow:
 
     # Constructor
-    def __init__(self, filename_csv=None):
+    def __init__(self, filename_csv):
+        """
+        Constructor for the signals window
+
+        Parameters
+        ----------
+            filename_csv : str
+                path to the CSV file
+        
+        Notes
+        -----
+            'values' : List
+                List of variables 
+        """
         self.values = []
         self.signals_selected = []
         #self.readImportFile()
