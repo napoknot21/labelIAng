@@ -19,10 +19,28 @@ class MainWindow:
         Parameters
         ----------
             signals_selected : List
+                Numpy array from the signalWindow.py containing the selected signals 
 
-            filename_video : List
+
+            filename_video : string
+                Video path for the video
 
             labels_entered : List
+                Numpy array from the labelsWindow.py containing the entered labels
+
+        Notes
+        -----
+            Some important attributes are initialized in the constructor
+
+            'graphic_video' : VideoUI.py
+                A videoUI.py object in order to display the video
+
+            'graphic_signals' = List
+                Numpy array for all graphic signals
+
+            'graphic_labels' = List
+                Numpy array for all graphic labels
+
         """
         self.signals_selected = np.array(signals_selected)
         self.filename_video = filename_video
@@ -101,9 +119,11 @@ class MainWindow:
 
         Notes
         -----
-            'video_label' : The principal label for the video.
+            'video_label' : Label (tkinter) 
+                The principal label for the video.
 
-            'labels_label' : The principal label for the Label object (Label.py).
+            'labels_label' : Label (tkinter)
+                The principal label for the Label object (Label.py).
 
             The tkinter labels are placed with the 'place' method.
         """
@@ -120,7 +140,8 @@ class MainWindow:
 
         Notes
         -----
-            'video_canvas' : The canvas (tkinter) where the video is showed
+            'video_canvas' : Label (tkinter)
+                The canvas (tkinter) where the video is showed
         
             The tkinter canvas is placed with the 'place' method
         """
@@ -135,11 +156,14 @@ class MainWindow:
 
         Notes
         -----
-            'video_info' : Label (tkinter) where the video information is showed (number of frames, etc)
+            'video_info' : Label (tkinter) 
+                Widget where the video information is showed (number of frames, etc)
 
-            'labels_frame" : Frame (tkinter) where the labelsUI will be placed 
+            'labels_frame" : Frame (tkinter) 
+                Widget where the labelsUI will be placed 
 
-            'buttons_canvas' : Label (tkinter) where the buttons video controllers will be placed
+            'buttons_canvas' : Label (tkinter) 
+                Widget where the buttons video controllers will be placed
         """
         # Video info label: Nb of frames and other information
         self.video_info = Label(self.labels_label, )
@@ -152,14 +176,60 @@ class MainWindow:
         self.buttons_canvas.place(relx=.05, rely=.8, relwidth=.905, relheight=.15)
 
 
-    # Place signalsUI elements
-    def __loadAndPlaceSignalsLabel (self) :
+    # Load 
+    def __configLabelsLabel (self) :
         """
-        Private function to load and configure the 'labels_frame' for placing the signalsUI elements/objects
+        Private function to load and configure the 'labels_frame' frame (tkinter) for placing the labelsUI elements/objects
 
         Notes
         -----
-            
+            'labels_canvas' : Canvas (tkinter)
+                Main canvas where the scrollbar will be placed'
+
+            'labels_scroll' : Scrollbar (tkinter)
+                Scrollbar for the labelsUI elements
+
+            'second_frame_label' : Frame (tkinter) 
+                Widget where the labelsUI elements will be placed
+        """
+        self.labels_canvas = Canvas (self.labels_frame)
+        self.labels_canvas.pack(side=LEFT, fill=BOTH, expand=1)
+        # Scrollbar for the labels
+        self.labels_scroll = Scrollbar (self.labels_frame, orient=VERTICAL, command=self.labels_canvas.yview)
+        self.labels_scroll.pack(side=RIGHT, fill=Y)
+        #config for the label canvas
+        self.labels_canvas.configure(yscrollcommand=self.labels_scroll.set)
+        # config the bind
+        self.labels_canvas.bind('<Configure>', lambda e : self.__fill_canvas_labels(e))
+        #Second frame (for print the labels blocks)
+        self.second_frame_label = Frame (self.labels_canvas,)
+        self.item_labels = self.labels_canvas.create_window((0,0), window=self.second_frame_label, anchor="nw")
+
+
+    # Function called for load and places all sub widgets
+    def loadAndPlaceSubLabelsHeader(self):
+        """Function calling the private functions for loading and putting all labels and widgets in the header"""
+        self.__loadAndPlaceSubLabelsHeader()
+        self.__loadAndPlaceVideoCanvas()
+        self.__loadAndPlaceLabelsCanvas()
+        self.__configLabelsLabel()
+    
+
+    # Place signalsUI elements
+    def __configSignalsLabel (self) :
+        """
+        Private function to load and configure the 'body' label (tkinter) for placing the signalsUI elements/objects
+
+        Notes
+        -----
+            'signals_canvas' : Canvas (tkinter)
+                ain canvas where the scrollbar will be placed'
+
+            'scrollbar_signal' : Scrollbar (tkinter)
+                Scrollbar for the signalsUI elements
+
+            'second_frame_signal' : Frame (tkinter) 
+                Frame where the signalsUI elements will be placed
         """
         # Canvas for the signals blocks
         self.signals_canvas = Canvas (self.body, bg="white", highlightbackground="white",  highlightthickness=0)
@@ -179,64 +249,58 @@ class MainWindow:
         self.item_signals = self.signals_canvas.create_window((0,0), window=self.second_frame_signal, anchor="nw")
 
 
-    # Function called for load and places all sub widgets
-    def loadAndPlaceSubLabelsHeader(self):
-        """l"""
-        self.__loadAndPlaceSubLabelsHeader()
-        self.__loadAndPlaceVideoCanvas()
-        self.__loadAndPlaceLabelsCanvas()
-        self.__loadAndPlaceLabelsLabel()
-    
-
-    def __loadAndPlaceLabelsLabel (self) :
-        # Canvas for labels 
-        self.labels_canvas = Canvas (self.labels_frame)
-        self.labels_canvas.pack(side=LEFT, fill=BOTH, expand=1)
-        # Scrollbar for the labels
-        self.labels_scroll = Scrollbar (self.labels_frame, orient=VERTICAL, command=self.labels_canvas.yview)
-        self.labels_scroll.pack(side=RIGHT, fill=Y)
-        #config for the label canvas
-        self.labels_canvas.configure(yscrollcommand=self.labels_scroll.set)
-        # config the bind
-        self.labels_canvas.bind('<Configure>', lambda e : self.__fill_canvas_labels(e))
-        #Second frame (for print the labels blocks)
-        self.second_frame_label = Frame (self.labels_canvas,)
-        self.item_labels = self.labels_canvas.create_window((0,0), window=self.second_frame_label, anchor="nw")
-
-
-    # Load and Place the Frames for the signals/labels blocks
+    # Load and Place 
     def loadAndPlaceSubLabelsBody (self) :
-        self.__loadAndPlaceSignalsLabel()
+        """Function calling other private functions that loads and places the Frames for the signals/labels blocks"""
+        self.__configSignalsLabel()
 
 
+    # Load and place
     def __loadAndPlaceLabelFramesAndTime (self) :
+        """
+        Private function that loads and places the labels (tkinter) about the nb_of_frames videos and info 
+        
+        Notes
+        -----
+            'frames' : Label (tkinter)
+                Widget representing the number of frames to display
+
+            'timer' : Label (tkinter)
+                Widget representing the timer 
+        """
         self.frames = Label (self.video_info, text="Total Frames: " + str(self.graphic_video.getTotalNumberFrames()))
         self.frames.place(relx=0, rely=0, relwidth=.5, relheight=1)
         self.timer = Label (self.video_info)
         self.timer.place(relx=0.5, rely=0, relwidth=.5, relheight=1)
 
 
-    # Private function for tranform the label to graphical labels (labelsUI)
-    def __loadGraphicalLabels (self) : 
+    # Load
+    def __loadGraphicalLabels (self) :
+        """ Private function that transforms the label object (label.py= to a graphical labels (labelUI.py)"""
         for i, label in enumerate(self.labels_entered) :
             labelUI = lbUI.LabelUI(self.second_frame_label, label)
             self.graphic_labels[i] = labelUI
     
 
-    # private funtion for place (grid) all graphical labels
+    # Place all graphical labels
     def __placeGraphicalLabels (self) :
+        """Private function that places the graphical label (labelsUI.py) with the 'pack' method on the main window""" 
         for labelUI in self.graphic_labels :
             label_block = labelUI.loadLabelBlock()
             label_block.pack(side="top", fill="both", expand=1)
 
 
+    # Load
     def __loadGraphicalSignals (self) :
+        """Private function that loads and transforms the signal (signal.py) to a graphical signal (signalUI.py)"""
         for i, signal in enumerate(self.signals_selected) :
             signalUI = sgUI.SignalUI(self.second_frame_signal, signal)
             self.graphic_signals[i] = signalUI
 
 
+    # Place
     def __placeGraphicalSignals (self) :
+        """Private function that places the graphical signals (signalUI.py) with the 'pack' method on the main window"""
         for signalUI in self.graphic_signals :
             signal_block = signalUI.loadGraphicalBlock()
             signal_block.pack(side="top", fill="both", expand=1)
@@ -244,6 +308,7 @@ class MainWindow:
 
     #Load and place all graphical labels in the main window
     def loadAndPlaceGraphicalLabels (self) :
+        """Function calling other private functions that loads and places all graphical labels (labelsUI.py)"""
         self.__loadAndPlaceLabelFramesAndTime()
         self.__loadGraphicalLabels()
         self.__placeGraphicalLabels()
@@ -251,15 +316,17 @@ class MainWindow:
         self.__placeGraphicalSignals()
 
 
-    # Auxiliary function for dinamic the width of the label block
+    # Auxiliary function for dynamic the width of the label block
     def __fill_canvas_labels (self, event) :
+        """Private function and auxiliary function that changes the labelUI scrollbar size depending on events (dynamically)"""
         canvas_width = event.width
         self.labels_canvas.itemconfig(self.item_labels, width=canvas_width)
         self.labels_canvas.configure(scrollregion=self.labels_canvas.bbox("all"))
 
 
-    # Auxiliary function for the dinamic width of the signal block
+    # Auxiliary function for the dynamic width of the signal block
     def __fill_canvas_signals (self, event, ) :
+        """Private function and auxiliary function that changes the signalUI scrollbar size depending on events (dynamically)"""
         canvas_width = event.width
         self.signals_canvas.itemconfig(self.item_signals, width=canvas_width)
         self.signals_canvas.configure(scrollregion=self.signals_canvas.bbox("all"))
