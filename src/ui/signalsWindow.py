@@ -1,5 +1,3 @@
-from cProfile import label
-from tabnanny import check
 from tkinter import *
 from tkinter import messagebox
 import pandas as pd
@@ -19,7 +17,10 @@ class SignalsWindow:
         Notes
         -----
             'values' : List
-                List of variables 
+                List of variables
+
+            'signals_selected' : List
+                List for the selected signals 
         """
         self.values = []
         self.signals_selected = []
@@ -37,13 +38,22 @@ class SignalsWindow:
         self.window.mainloop()
 
 
-    # Auxiliary function for reading the data import
-    def readImportFile (self) :
+    # Auxiliary function 
+    def readImportFile (self) : 
+        """Function for reading the data import [! NOT USED]"""
         self.data = pd.read_csv("../.data/import/savesSignals.csv")
 
 
     # Read the file csv source
     def readSource(self, filename_csv):
+        """
+        Function that reads and open the csv file with the panda methods
+        
+        Parameters
+        ----------
+            filename_csv : string
+                the path to the csv file
+        """
         print("Reading source file...")
         if filename_csv.endswith(".csv"):
             self.data = pd.read_csv(filename_csv, index_col=0)
