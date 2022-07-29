@@ -9,6 +9,20 @@ from src.core import label as lb
 class LabelsWindow:
 
     def __init__(self):
+        """
+        Constructor for LabelsWindow
+        
+        Notes
+        -----
+            'colorsArray' : List
+                An auxiliary list of colors for the labels
+
+            'labelsArray' : List
+                Where the labels objects are stored 
+
+            'graphicsArray' : List
+                Where the graphics Labels objects are stored
+        """
         self.window = Tk()
         self.initWindow()
 
@@ -34,7 +48,7 @@ class LabelsWindow:
     # Initialize main window
     def initWindow(self):
         """
-        Initialize the window propeties as the title, the geometry, and the icon image
+        Initialize the window properties as the title, the geometry, and the icon image
         """
         self.window.title("Video app")
         self.window.geometry("707x500")
@@ -107,7 +121,7 @@ class LabelsWindow:
 
         Notes
         -----
-            The '__fill_canvas(event)' funciton is a private function to config the scrollbar and the canvas yview
+            The '__fill_canvas(event)' function is a private function to config the scrollbar and the canvas yview
 
             The 'highlightthickness' option in the Canvas/Labels tkinter object is useful to avoid black borders in the objects 
         """
@@ -134,7 +148,7 @@ class LabelsWindow:
 
         Returns
         -------
-            "label_header" : Canvas object with the header labels indicanting the id column, name column and color browser
+            "label_header" : Canvas object with the header labels indicating the id column, name column and color browser
 
         Notes
         -----
@@ -390,7 +404,7 @@ class LabelsWindow:
     # Adding
     def addGraphicalLabel (self) :
         """
-        Function that creates a new Label object (label.py), adds it to the 'ArrayLabels', destroyes the other labelsUI and the reloads 
+        Function that creates a new Label object (label.py), adds it to the 'ArrayLabels', destroys the other labelsUI and the reloads 
         all graphical labels with the new one included 
         """
         len_labels = len(self.labelsArray)
@@ -499,7 +513,7 @@ class LabelsWindow:
     # Color browser 
     def __colorBrowserChange (self, label):
         """
-        Private function that open a browser window in order to select a color for the curretn label (tkinter)
+        Private function that open a browser window in order to select a color for the current label (tkinter)
 
         Parameters
         ----------
