@@ -1,6 +1,6 @@
-# Video Desktop App
+# LabelIAng
 
-A Desktop app for Valeo Vision.
+A **beta** Desktop app for Valeo-Vision. (Copyrigth 2022)
 
 ## Pre-requisites
 
@@ -20,11 +20,11 @@ pip3 install pandas tk opencv-python matplotlib pillow
 
 First, we need to clone the repository
 ```
-git clone https://github.com/napoknot21/video-desktop-app.git
+git clone https://github.com/napoknot21/labelIAng.git
 ```
 We enter to the cloned directory
 ```
-cd video-desktop-app
+cd labelIAng
 ```
 We run ```launcher.py``` file 
 ```
@@ -34,3 +34,7 @@ python3 launcher.py
 ## How to use it ?
 
 Check out the documentation [here](documentation/instructions.md)
+
+
+### Note
+** Due to copyright, the final version can't be posted as free source. However, this "beta" version can sumarise all what the app was supposed to do ! **
