@@ -1,8 +1,8 @@
 import importlib.util
 import sys, subprocess
 
-libraries = ['pandas', 'opencv-python', 'pillow', 'tk', 'matplotlib']
-names = ['pandas', 'cv2', 'PIL', 'tk', 'matplotlib',]
+libraries = ['pandas', 'opencv-python', 'pillow', 'tkinter', 'matplotlib']
+names = ['pandas', 'cv2', 'PIL', 'tkinter', 'matplotlib',]
 
 print("Cheking for libraries and dependencies...")
 
